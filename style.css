@@ -440,5 +440,17 @@ body {
   }
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%; /* fallback */
+}
+#app-container {
+  height: var(--vh, 100vh); /* use JS-calculated viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
 
 

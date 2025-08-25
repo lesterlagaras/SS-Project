@@ -545,6 +545,20 @@ renderCalendar();
   renderCalendar();
 });
 
+// ================= Fix mobile viewport height (keyboard resize) =================
+function setViewportHeight() {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Initial call
+setViewportHeight();
+
+// Recalculate on resize or orientation change
+window.addEventListener('resize', setViewportHeight);
+window.addEventListener('orientationchange', setViewportHeight);
+
+
 // ================= Mobile & Desktop Enter Key Handling =================
 document.addEventListener('DOMContentLoaded', () => {
   const userInput = document.getElementById('user-input');
@@ -565,7 +579,6 @@ document.addEventListener('DOMContentLoaded', () => {
           e.preventDefault();
           sendBtn.click();
         }
-        // Shift+Enter sa desktop = newline, automatic kaya hindi na kailangan extra code
       }
     }
   });
