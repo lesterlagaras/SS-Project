@@ -550,14 +550,16 @@ function setViewportHeight() {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--vh', `${vh}px`);
 }
-
-// Initial call
 setViewportHeight();
-
-// Recalculate on resize or orientation change
 window.addEventListener('resize', setViewportHeight);
 window.addEventListener('orientationchange', setViewportHeight);
 
+// ================= Prevent body scroll on mobile keyboard =================
+document.body.addEventListener('touchmove', function (e) {
+  if (!e.target.closest('#conversation')) {
+    e.preventDefault(); // disable scroll sa buong body, except sa #conversation
+  }
+}, { passive: false });
 
 // ================= Mobile & Desktop Enter Key Handling =================
 document.addEventListener('DOMContentLoaded', () => {
@@ -567,14 +569,12 @@ document.addEventListener('DOMContentLoaded', () => {
   userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
       if (isMobile()) {
-        // Sa mobile: Enter lang = newline
         e.preventDefault();
         const cursorPos = userInput.selectionStart;
         const text = userInput.value;
         userInput.value = text.slice(0, cursorPos) + "\n" + text.slice(cursorPos);
         userInput.selectionEnd = cursorPos + 1;
       } else {
-        // Sa desktop: Enter = send, Shift+Enter = newline
         if (!e.shiftKey) {
           e.preventDefault();
           sendBtn.click();
@@ -584,7 +584,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function isMobile() {
-    // Include Android, iOS, iPad, iPod
     return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   }
 });

@@ -443,13 +443,21 @@ body {
 html, body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
-  height: 100%; /* fallback */
+  height: 100%;
+  overflow: hidden; /* totally disable page scroll */
 }
+
 #app-container {
-  height: var(--vh, 100vh); /* use JS-calculated viewport height */
+  height: var(--vh, 100vh);
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* container lang may control */
+}
+
+#conversation {
+  flex: 1;
+  overflow-y: auto;  /* scrollable lang yung conversation area */
+  -webkit-overflow-scrolling: touch;
 }
 
 
