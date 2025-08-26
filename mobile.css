@@ -5,38 +5,31 @@ body {
   padding: 0;
   box-sizing: border-box;
   overflow-x: hidden;
-  font-family: 'Inter', sans-serif;
-}
-
-#chat-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* full viewport height */
 }
 
 #conversation {
-  flex: 1;
-  overflow-y: auto;
+  margin-bottom: calc(150px + env(safe-area-inset-bottom, 0px));
   padding: 8px;
-  max-height: calc(var(--vh, 1vh) * 100 - 60px); /* auto adjust sa input bar */
-  word-wrap: break-word;
+  overflow-y: auto;
+  max-height: calc(var(--vh, 1vh) * 100 - 160px); /* auto adjust sa keyboard */
 }
 
 #input-bar {
+  width: 95%;
+  bottom: 15px;
+  padding: 8px 12px;
+  position: fixed;
   display: flex;
   gap: 8px;
-  padding: 8px;
-  background: #fff;
-  border-top: 1px solid #ccc;
-  position: sticky;
-  bottom: 0;
   z-index: 1000;
-  border-radius: 8px 8px 0 0;
-  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 #user-input {
   flex: 1;
+  font-size: 0.95rem;
   max-height: 150px;
   overflow-y: auto;
   padding: 6px 8px;
@@ -46,12 +39,15 @@ body {
 }
 
 #send-btn {
+  width: auto;
+  height: 48px;
+  font-size: 1rem;
   padding: 0 12px;
   border: none;
   border-radius: 6px;
+  cursor: pointer;
   background-color: #4CAF50;
   color: #fff;
-  cursor: pointer;
 }
 
 #notes-panel, #calendar-panel, #all-events-panel {
@@ -66,7 +62,6 @@ body {
   z-index: 1000;
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  flex-direction: column;
 }
 
 .message {
@@ -81,29 +76,6 @@ body {
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
   }
   #conversation {
-    margin-bottom: calc(60px + env(safe-area-inset-bottom));
-  }
-}
-
-/* ================= Smaller screen adjustments ================= */
-@media screen and (max-width: 480px) {
-  #notes-panel, #calendar-panel, #all-events-panel {
-    width: 90%;
-    height: 65%;
-    left: 5%;
-    top: 17%;
-  }
-
-  #input-bar {
-    padding: 6px;
-  }
-
-  #user-input {
-    font-size: 0.9rem;
-  }
-
-  #send-btn {
-    font-size: 0.95rem;
-    padding: 0 10px;
+    margin-bottom: calc(150px + env(safe-area-inset-bottom));
   }
 }
