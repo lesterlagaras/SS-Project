@@ -563,18 +563,29 @@ document.body.addEventListener('touchmove', function (e) {
   e.preventDefault(); // block scroll sa ibang part ng body
 }, { passive: false });
 
-// ================= Mobile & Desktop Enter Key Handling =================
+// ================= Mobile & Desktop Enter Key Handling + Textarea Scroll =================
 document.addEventListener('DOMContentLoaded', () => {
   const userInput = document.getElementById('user-input');
   const sendBtn = document.getElementById('send-btn');
 
-  // Auto-resize textarea for mobile
+  // Auto-resize textarea and force scroll
   function resizeTextarea() {
     userInput.style.height = 'auto';
     userInput.style.height = (userInput.scrollHeight) + 'px';
+    // force scroll sa bottom sa mobile
+    userInput.scrollTop = userInput.scrollHeight;
   }
 
+  // Auto-resize habang nagta-type
   userInput.addEventListener('input', resizeTextarea);
+
+  // Scroll sa focus para mobile keyboard
+  userInput.addEventListener('focus', () => {
+    setTimeout(() => {
+      userInput.scrollTop = userInput.scrollHeight;
+    }, 50);
+  });
+
   window.addEventListener('resize', resizeTextarea);
 
   // Handle Enter key
