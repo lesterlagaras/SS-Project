@@ -133,7 +133,11 @@
   <div id="conversation"></div>
 </div>
 
-<div id="input-bar">
-  <textarea id="user-input" placeholder="Type your question..." inputmode="text" enterkeyhint="newline"></textarea>
-  <button id="send-btn">Send</button>
+<div id="chat-wrapper" style="position:fixed; top:0; left:0; right:0; bottom:0; display:flex; flex-direction:column;">
+  <div id="conversation" style="flex:1; overflow-y:auto; padding:8px;"></div>
+  
+  <div id="input-bar" style="display:flex; padding:8px; gap:8px;">
+    <textarea id="user-input" style="flex:1; resize:none;"></textarea>
+    <button id="send-btn">Send</button>
+  </div>
 </div>

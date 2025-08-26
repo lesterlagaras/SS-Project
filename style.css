@@ -237,3 +237,26 @@ body.dark-mode #all-events-panel div.event-item {
   border: 1px solid #555;
   color: #ffffff;
 }
+
+/* ================= Chat Wrapper & Input Fix ================= */
+#chat-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#conversation {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+#input-bar {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  z-index: 1000;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+}
