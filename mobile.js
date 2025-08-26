@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const userInput = document.getElementById('user-input');
   const conversation = document.getElementById('conversation');
   const inputBar = document.getElementById('input-bar');
+  const sendBtn = document.getElementById('send-btn');
 
   // ================= Set vh for mobile (keyboard adjustment) =================
   function adjustVH() {
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newHeight = Math.min(userInput.scrollHeight, maxHeight);
     userInput.style.height = newHeight + 'px';
 
-    // Maintain conversation scroll so input bar not hidden
+    // Scroll conversation to bottom
     conversation.scrollTop = conversation.scrollHeight;
   }
   userInput.addEventListener('input', resizeTextarea);
@@ -46,8 +47,19 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (top === totalScroll) conversation.scrollTop = top - 1;
   });
 
-  // Optional: scroll conversation on orientation change
+  // ================= Scroll conversation after orientation change =================
   window.addEventListener('orientationchange', () => {
     setTimeout(() => { conversation.scrollTop = conversation.scrollHeight; }, 300);
+  });
+
+  // ================= Enter key handling for newline / send =================
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      if (!e.shiftKey) {
+        e.preventDefault(); // prevent newline
+        sendBtn.click();    // trigger send
+      }
+      // Shift+Enter → automatic newline, default behavior
+    }
   });
 });
