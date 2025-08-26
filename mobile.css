@@ -19,6 +19,7 @@ body {
   overflow-y: auto;
   padding: 8px;
   /* Wag nang mag-set ng max-height sa JS, auto-adjust sa flex layout */
+  margin-bottom: calc(20px + env(safe-area-inset-bottom));
 }
 
 #input-bar {
@@ -88,5 +89,9 @@ body {
 @supports(padding: max(0px)) {
   #input-bar {
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+
+  #conversation {
+    margin-bottom: calc(20px + env(safe-area-inset-bottom));
   }
 }
