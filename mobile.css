@@ -1,0 +1,81 @@
+/* ================= Mobile Reset ================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* HINDI mag-scroll ang buong page */
+  font-family: 'Inter', sans-serif;
+  background: #f5f5f5;
+}
+
+/* Wrapper ng buong chat */
+#chat-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* Conversation area (scroll dito lang) */
+#conversation {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background: #ffffff;
+}
+
+/* Input bar fixed sa baba */
+#input-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px;
+  background: #fff;
+  border-top: 1px solid #ddd;
+}
+
+/* Textarea */
+#user-input {
+  flex: 1;
+  font-size: 1rem;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  resize: none;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* Send button */
+#send-btn {
+  padding: 0 16px;
+  height: 40px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 20px;
+  background: #4CAF50;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Messages */
+.message {
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* User vs AI */
+.message.user {
+  background: #dcf8c6;
+  align-self: flex-end;
+}
+.message.ai {
+  background: #f1f1f1;
+  align-self: flex-start;
+}
