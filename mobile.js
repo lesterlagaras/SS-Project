@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
 
-    // Adjust conversation max-height dynamically
     const inputHeight = inputBar.offsetHeight || 60;
     conversation.style.maxHeight = `calc(var(--vh, 1vh) * 100 - ${inputHeight + 20}px)`;
   }
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const newHeight = Math.min(userInput.scrollHeight, maxHeight);
     userInput.style.height = newHeight + 'px';
 
-    // Scroll conversation to bottom
     conversation.scrollTop = conversation.scrollHeight;
   }
   userInput.addEventListener('input', resizeTextarea);
@@ -52,14 +50,31 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { conversation.scrollTop = conversation.scrollHeight; }, 300);
   });
 
-  // ================= Enter key handling for newline / send =================
+  // ================= Disable Enter send on mobile keyboard =================
   userInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-      if (!e.shiftKey) {
-        e.preventDefault(); // prevent newline
-        sendBtn.click();    // trigger send
-      }
-      // Shift+Enter → automatic newline, default behavior
+      e.preventDefault(); // prevent sending
+      const start = userInput.selectionStart;
+      const end = userInput.selectionEnd;
+      userInput.value = userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
+      userInput.selectionStart = userInput.selectionEnd = start + 1;
+      resizeTextarea(); // adjust height after new line
     }
+  });
+
+  // ================= Send button click =================
+  sendBtn.addEventListener('click', () => {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    // Append message to conversation
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'message';
+    msgDiv.textContent = message;
+    conversation.appendChild(msgDiv);
+
+    userInput.value = '';
+    resizeTextarea();
+    conversation.scrollTop = conversation.scrollHeight;
   });
 });
