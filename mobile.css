@@ -1,0 +1,41 @@
+/* ================= Mobile adjustments ================= */
+body {
+  font-size: 0.95rem;
+}
+
+#conversation {
+  margin-bottom: calc(150px + env(safe-area-inset-bottom, 0px));
+  padding: 5px;
+}
+
+#input-bar {
+  width: 95%;
+  bottom: 15px;
+  padding: 8px 12px;
+  position: fixed;
+  display: flex;
+  gap: 8px;
+}
+
+#user-input {
+  flex: 1;
+  font-size: 0.95rem;
+  max-height: 150px;
+}
+
+#send-btn {
+  width: auto;
+  height: 48px;
+  font-size: 1rem;
+}
+
+#notes-panel, #calendar-panel, #all-events-panel {
+  width: 95%;
+  height: 70%;
+  top: 15%;
+  left: 2.5%;
+}
+
+.message {
+  font-size: 0.95rem;
+}

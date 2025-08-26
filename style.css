@@ -237,11 +237,3 @@ body.dark-mode #all-events-panel div.event-item {
   border: 1px solid #555;
   color: #ffffff;
 }
-
-/* ================= Mobile adjustments ================= */
-@media screen and (max-width: 768px) {
-  #input-bar { width: 95%; bottom: 15px; padding: 8px 12px; }
-  #user-input { font-size: 0.95rem; max-height: 150px; }
-  #send-btn { width: auto; height: 48px; font-size: 1rem; }
-  #conversation { margin-bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
-}
