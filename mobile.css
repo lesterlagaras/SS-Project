@@ -18,8 +18,7 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: 8px;
-  margin-bottom: calc(150px + env(safe-area-inset-bottom, 0px));
-  max-height: calc(var(--vh, 1vh) * 100 - 160px);
+  /* Wag nang mag-set ng max-height sa JS, auto-adjust sa flex layout */
 }
 
 #input-bar {
@@ -83,4 +82,11 @@ body {
   font-size: 0.95rem;
   margin-bottom: 6px;
   word-wrap: break-word;
+}
+
+/* ================= Safe-area adjustments for iPhone X and above ================= */
+@supports(padding: max(0px)) {
+  #input-bar {
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  }
 }
