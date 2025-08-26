@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function adjustVH() {
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
-
     const inputHeight = inputBar.offsetHeight || 60;
     conversation.style.maxHeight = `calc(var(--vh, 1vh) * 100 - ${inputHeight + 20}px)`;
   }
@@ -24,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     userInput.style.height = 'auto';
     const newHeight = Math.min(userInput.scrollHeight, maxHeight);
     userInput.style.height = newHeight + 'px';
-
     conversation.scrollTop = conversation.scrollHeight;
   }
   userInput.addEventListener('input', resizeTextarea);
@@ -67,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = userInput.value.trim();
     if (!message) return;
 
-    // Append message to conversation
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message';
     msgDiv.textContent = message;
