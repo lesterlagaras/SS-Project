@@ -40,13 +40,14 @@ body {
 #conversation {
   display: none;
   width: 100%;
-  max-width: none;
+  flex: 1; /* instead of max-width: none */
   flex-direction: column;
   gap: 12px; /* spacing sa pagitan ng messages */
   overflow-y: auto;
   padding: 0 16px; 
-  margin: 50px; 
+  margin: 0; /* tanggalin yung fixed margin na sumasagabal sa scroll */
   margin-bottom: 160px; /* space for floating input bar */
+  -webkit-overflow-scrolling: touch; /* smooth scroll sa iOS */
   scrollbar-gutter: stable both-edges;
   border-radius: 10px;
   box-sizing: border-box;

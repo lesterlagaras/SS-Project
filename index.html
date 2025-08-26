@@ -556,9 +556,13 @@ window.addEventListener('orientationchange', setViewportHeight);
 
 // ================= Prevent body scroll on mobile keyboard =================
 document.body.addEventListener('touchmove', function (e) {
-  if (!e.target.closest('#conversation')) {
-    e.preventDefault(); // disable scroll sa buong body, except sa #conversation
+  // Hayaan mag scroll kung nasa loob ng #conversation
+  if (e.target.closest('#conversation')) {
+    e.stopPropagation(); // wag pakialaman, hayaan mag scroll
+    return;
   }
+  // Pero kung ibang part ng body, block scroll
+  e.preventDefault();
 }, { passive: false });
 
 // ================= Mobile & Desktop Enter Key Handling =================
