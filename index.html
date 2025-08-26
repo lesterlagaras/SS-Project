@@ -557,7 +557,7 @@ window.addEventListener('orientationchange', setViewportHeight);
 // ================= Prevent body scroll on mobile keyboard =================
 document.body.addEventListener('touchmove', function (e) {
   // Hayaan mag scroll kung nasa loob ng #conversation
-  if (e.target.closest('#conversation')) {
+  if (e.target.closest('#conversation') || e.target.closest('#user-input')) {
     e.stopPropagation(); // wag pakialaman, hayaan mag scroll
     return;
   }
@@ -565,11 +565,16 @@ document.body.addEventListener('touchmove', function (e) {
   e.preventDefault();
 }, { passive: false });
 
-// ================= Mobile & Desktop Enter Key Handling =================
+// ================= Mobile & Desktop Enter Key Handling + Textarea Auto-scroll =================
 document.addEventListener('DOMContentLoaded', () => {
   const userInput = document.getElementById('user-input');
   const sendBtn = document.getElementById('send-btn');
 
+  function isMobile() {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  // Handle Enter key
   userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
       if (isMobile()) {
@@ -578,6 +583,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = userInput.value;
         userInput.value = text.slice(0, cursorPos) + "\n" + text.slice(cursorPos);
         userInput.selectionEnd = cursorPos + 1;
+
+        // Scroll sa dulo habang nagta-type
+        userInput.scrollTop = userInput.scrollHeight;
       } else {
         if (!e.shiftKey) {
           e.preventDefault();
@@ -587,8 +595,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function isMobile() {
-    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  }
+  // Auto-expand at scroll habang nagta-type sa mobile
+  userInput.addEventListener('input', function() {
+    if (isMobile()) {
+      this.style.height = 'auto';                // reset height
+      this.style.height = this.scrollHeight + 'px'; // auto-expand
+      this.scrollTop = this.scrollHeight;       // scroll sa dulo
+    }
+  });
 });
 </script>
