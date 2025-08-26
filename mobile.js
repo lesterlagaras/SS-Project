@@ -3,7 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const conversation = document.getElementById('conversation');
   const sendBtn = document.getElementById('send-btn');
 
-  // Auto-resize textarea
+  // ===== Helper: Scroll to bottom =====
+  function scrollToBottom() {
+    conversation.scrollTop = conversation.scrollHeight;
+  }
+
+  // ===== Auto-resize textarea =====
   function resizeTextarea() {
     const maxHeight = 150;
     userInput.style.height = 'auto';
@@ -13,19 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   userInput.addEventListener('input', resizeTextarea);
 
-  // Enter key = new line (not send)
+  // ===== Enter key = newline, not send =====
   userInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       const start = userInput.selectionStart;
       const end = userInput.selectionEnd;
-      userInput.value = userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
+      userInput.value =
+        userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
       userInput.selectionStart = userInput.selectionEnd = start + 1;
       resizeTextarea();
     }
   });
 
-  // Send button
+  // ===== Send button =====
   sendBtn.addEventListener('click', () => {
     const message = userInput.value.trim();
     if (!message) return;
@@ -37,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     conversation.appendChild(msgDiv);
 
     // Auto scroll
-    conversation.scrollTop = conversation.scrollHeight;
+    scrollToBottom();
 
     // Clear input
     userInput.value = '';
@@ -49,7 +55,21 @@ document.addEventListener('DOMContentLoaded', () => {
       aiDiv.className = 'message ai';
       aiDiv.textContent = "AI reply to: " + message;
       conversation.appendChild(aiDiv);
-      conversation.scrollTop = conversation.scrollHeight;
+      scrollToBottom();
     }, 500);
+  });
+
+  // ===== Fix mobile viewport height (keyboard issue) =====
+  function setViewportHeight() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  setViewportHeight();
+  window.addEventListener('resize', setViewportHeight);
+  window.addEventListener('orientationchange', setViewportHeight);
+
+  // ===== Auto-scroll kapag nag-focus sa input =====
+  userInput.addEventListener('focus', () => {
+    setTimeout(scrollToBottom, 300); // small delay para lumabas muna keyboard
   });
 });
