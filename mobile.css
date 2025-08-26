@@ -5,26 +5,34 @@ body {
   padding: 0;
   box-sizing: border-box;
   overflow-x: hidden;
+  height: 100vh;
+}
+
+#chat-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 #conversation {
-  margin-bottom: calc(150px + env(safe-area-inset-bottom, 0px));
-  padding: 8px;
+  flex: 1;
   overflow-y: auto;
-  max-height: calc(var(--vh, 1vh) * 100 - 160px); /* auto adjust sa keyboard */
+  padding: 8px;
+  margin-bottom: 0;
 }
 
 #input-bar {
-  width: 95%;
-  bottom: 15px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
   padding: 8px 12px;
-  position: fixed;
+  position: fixed; /* laging naka-stick sa ilalim */
   display: flex;
   gap: 8px;
   z-index: 1000;
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border-top: 1px solid #ccc;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
 }
 
 #user-input {
@@ -74,8 +82,5 @@ body {
 @supports(padding: max(0px)) {
   #input-bar {
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
-  }
-  #conversation {
-    margin-bottom: calc(150px + env(safe-area-inset-bottom));
   }
 }

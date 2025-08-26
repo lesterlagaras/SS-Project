@@ -16,7 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     conversation.style.maxHeight = `calc(var(--vh, 1vh) * 100 - ${inputHeight + 20}px)`;
   }
   adjustVH();
-  window.addEventListener('resize', adjustVH);
+  window.addEventListener('resize', () => {
+    adjustVH();
+    adjustInputBar(); // Update input bar position on resize
+  });
 
   // ================= Auto-resize textarea & adjust conversation =================
   function resizeTextarea() {
@@ -37,6 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
       conversation.scrollTop = conversation.scrollHeight;
     }, 300);
   });
+
+  // ================= Dynamic input bar position for keyboard =================
+  function adjustInputBar() {
+    const viewportHeight = window.innerHeight;
+    const documentHeight = document.documentElement.clientHeight;
+    const keyboardHeight = viewportHeight - documentHeight;
+    inputBar.style.bottom = `${Math.max(15, keyboardHeight + 15)}px`;
+  }
+  window.addEventListener('resize', adjustInputBar);
+  window.addEventListener('orientationchange', adjustInputBar);
 
   // ================= Touch scroll fix for conversation =================
   conversation.addEventListener('touchstart', () => {
