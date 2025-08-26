@@ -554,38 +554,39 @@ setViewportHeight();
 window.addEventListener('resize', setViewportHeight);
 window.addEventListener('orientationchange', setViewportHeight);
 
-// ================= Prevent body scroll on mobile keyboard =================
+// ================= Prevent body scroll on mobile except chat & input =================
 document.body.addEventListener('touchmove', function (e) {
-  // Hayaan mag scroll kung nasa loob ng #conversation
   if (e.target.closest('#conversation') || e.target.closest('#user-input')) {
-    e.stopPropagation(); // wag pakialaman, hayaan mag scroll
+    // hayaan mag-scroll sa chat at textarea
     return;
   }
-  // Pero kung ibang part ng body, block scroll
-  e.preventDefault();
+  e.preventDefault(); // block scroll sa ibang part ng body
 }, { passive: false });
 
-// ================= Mobile & Desktop Enter Key Handling + Textarea Auto-scroll =================
+// ================= Mobile & Desktop Enter Key Handling =================
 document.addEventListener('DOMContentLoaded', () => {
   const userInput = document.getElementById('user-input');
   const sendBtn = document.getElementById('send-btn');
 
-  function isMobile() {
-    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  // Auto-resize textarea for mobile
+  function resizeTextarea() {
+    userInput.style.height = 'auto';
+    userInput.style.height = (userInput.scrollHeight) + 'px';
   }
+
+  userInput.addEventListener('input', resizeTextarea);
+  window.addEventListener('resize', resizeTextarea);
 
   // Handle Enter key
   userInput.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
       if (isMobile()) {
-        e.preventDefault();
-        const cursorPos = userInput.selectionStart;
-        const text = userInput.value;
-        userInput.value = text.slice(0, cursorPos) + "\n" + text.slice(cursorPos);
-        userInput.selectionEnd = cursorPos + 1;
-
-        // Scroll sa dulo habang nagta-type
-        userInput.scrollTop = userInput.scrollHeight;
+        if (!e.shiftKey) {
+          e.preventDefault();
+          sendBtn.click();
+          userInput.value = '';
+          resizeTextarea();
+        }
       } else {
         if (!e.shiftKey) {
           e.preventDefault();
@@ -595,13 +596,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Auto-expand at scroll habang nagta-type sa mobile
-  userInput.addEventListener('input', function() {
-    if (isMobile()) {
-      this.style.height = 'auto';                // reset height
-      this.style.height = this.scrollHeight + 'px'; // auto-expand
-      this.scrollTop = this.scrollHeight;       // scroll sa dulo
-    }
-  });
+  function isMobile() {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  // Initial resize
+  resizeTextarea();
 });
 </script>
