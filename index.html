@@ -356,15 +356,59 @@ document.addEventListener('DOMContentLoaded', () => {
   resizeTextarea();
 });
 
-// ================= Mobile viewport fix =================
-function setViewportHeight(){let vh=window.innerHeight*0.01; document.documentElement.style.setProperty('--vh',`${vh}px`);}
-setViewportHeight();
-window.addEventListener('resize',setViewportHeight);
-window.addEventListener('orientationchange',setViewportHeight);
+document.addEventListener('DOMContentLoaded', () => {
+  const conversation = document.getElementById('conversation');
+  const userInput = document.getElementById('user-input');
 
-// ================= Prevent body scroll except chat/input =================
-document.body.addEventListener('touchmove',function(e){
-  if(e.target.closest('#conversation') || e.target.closest('#user-input')) return;
-  e.preventDefault();
-},{passive:false});
+  // ================= Mobile viewport fix =================
+  function setViewportHeight() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  setViewportHeight();
+  window.addEventListener('resize', setViewportHeight);
+  window.addEventListener('orientationchange', setViewportHeight);
+
+  // ================= Prevent body scroll except chat/input =================
+  document.body.addEventListener('touchmove', function(e){
+    if(e.target.closest('#conversation') || e.target.closest('#user-input')) return;
+    e.preventDefault();
+  }, { passive: false });
+
+  // ================= Mobile keyboard scroll fix =================
+  function scrollConversationToBottom() {
+    setTimeout(() => {
+      conversation.scrollTop = conversation.scrollHeight;
+    }, 300);
+  }
+
+  userInput.addEventListener('focus', scrollConversationToBottom);
+  userInput.addEventListener('input', scrollConversationToBottom);
+  window.addEventListener('resize', () => {
+    if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      scrollConversationToBottom();
+    }
+  });
+
+  // ================= Auto-resize + scroll fix para sa input bar =================
+  const maxInputHeight = 150; // maximum height ng textarea
+
+  function resizeUserInput() {
+    userInput.style.height = 'auto';
+    const newHeight = Math.min(userInput.scrollHeight, maxInputHeight);
+    userInput.style.height = newHeight + 'px';
+
+    // Scroll sa bottom kapag lumagpas sa maxHeight
+    if(userInput.scrollHeight > maxInputHeight) {
+      userInput.scrollTop = userInput.scrollHeight;
+    }
+  }
+
+  userInput.addEventListener('input', resizeUserInput);
+  userInput.addEventListener('focus', () => setTimeout(resizeUserInput, 300));
+  window.addEventListener('resize', resizeUserInput);
+
+  // Initial resize
+  resizeUserInput();
+});
 </script>
