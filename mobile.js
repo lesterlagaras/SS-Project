@@ -4,16 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendBtn = document.getElementById('send-btn');
   const welcomeMessage = document.getElementById('welcome-message');
 
-  // Auto-resize textarea
+  // ================= Auto-resize textarea =================
   function resizeTextarea() {
     userInput.style.height = 'auto';
     const newHeight = Math.min(userInput.scrollHeight, 150);
     userInput.style.height = newHeight + 'px';
     conversation.scrollTop = conversation.scrollHeight;
   }
-  userInput.addEventListener('input', resizeTextarea);
+  userInput.addEventListener('input', () => {
+    userInput.value = userInput.value.toUpperCase(); // Always uppercase
+    resizeTextarea();
+  });
 
-  // Add message
+  // ================= Send message =================
   function addMessage(text, sender) {
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${sender}`;
@@ -22,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     conversation.scrollTop = conversation.scrollHeight;
   }
 
-  // Send message
   function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
@@ -43,7 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   sendBtn.addEventListener('click', sendMessage);
 
-  // Mobile viewport fix
+  // ================= Enter = newline =================
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent sending
+      const start = userInput.selectionStart;
+      const end = userInput.selectionEnd;
+      userInput.value = userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
+      userInput.selectionStart = userInput.selectionEnd = start + 1;
+      resizeTextarea();
+    }
+  });
+
+  // ================= Mobile viewport fix =================
   function setViewportHeight() {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -52,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', setViewportHeight);
   window.addEventListener('orientationchange', setViewportHeight);
 
-  // Focus handling
+  // ================= Focus handling =================
   userInput.addEventListener('focus', () => {
     setTimeout(() => {
       userInput.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
