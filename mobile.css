@@ -1,36 +1,50 @@
-html, body {
+/* ================= Reset ================= */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
   height: 100%;
   font-family: 'Inter', sans-serif;
   background: #f7f7f8;
   overflow: hidden;
 }
 
-#app {
+/* ================= Chat Container ================= */
+#chat-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  height: var(--vh, 100vh); /* mobile fix */
+  padding: 12px;
+  overflow: hidden;
 }
 
-/* Conversation area */
+#welcome-message {
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 40px 10px;
+  flex-shrink: 0;
+}
+
 #conversation {
   flex: 1;
-  overflow-y: auto;
-  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow-y: auto;
+  padding: 0 8px;
+  scroll-behavior: smooth;
 }
 
-/* Messages */
+/* ================= Messages ================= */
 .message {
   max-width: 80%;
   padding: 10px 14px;
   border-radius: 16px;
+  font-size: 14px;
   line-height: 1.4;
-  font-size: 15px;
   word-wrap: break-word;
 }
 
@@ -48,15 +62,14 @@ html, body {
   border-bottom-left-radius: 4px;
 }
 
-/* Input bar */
+/* ================= Input Bar ================= */
 #input-bar {
-  flex-shrink: 0;
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 8px;
   background: #fff;
   border-top: 1px solid #ddd;
-  gap: 8px;
+  gap: 6px;
 }
 
 #user-input {
@@ -66,7 +79,7 @@ html, body {
   padding: 10px;
   border-radius: 12px;
   background: #f1f1f1;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.4;
   outline: none;
   max-height: 150px;
@@ -85,25 +98,13 @@ html, body {
 
 #send-btn:hover { opacity: 0.9; transition: 0.2s; }
 
-/* Optional: smooth scroll on mobile */
-#conversation {
-  scroll-behavior: smooth;
-}
-
-/* Dark mode adjustments */
+/* ================= Dark Mode ================= */
 body.dark-mode {
   background: #121212;
 }
 
-body.dark-mode #conversation .message.user {
-  background: #ffffff;
-  color: #000;
-}
-
-body.dark-mode #conversation .message.ai {
-  background: #2c2c2e;
-  color: #fff;
-}
+body.dark-mode #conversation .message.user { background: #ffffff; color: #000; }
+body.dark-mode #conversation .message.ai { background: #2c2c2e; color: #fff; }
 
 body.dark-mode #input-bar { background: #1e1e1e; }
 body.dark-mode #user-input { background: #2c2c2e; color: #fff; }

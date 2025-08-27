@@ -2,76 +2,82 @@ document.addEventListener('DOMContentLoaded', () => {
   const userInput = document.getElementById('user-input');
   const conversation = document.getElementById('conversation');
   const sendBtn = document.getElementById('send-btn');
+  const welcomeMessage = document.getElementById('welcome-message');
 
-  // Auto-resize
+  // ================= Auto-resize textarea =================
   function resizeTextarea() {
     userInput.style.height = 'auto';
-    userInput.style.height = Math.min(userInput.scrollHeight, 150) + 'px';
+    const newHeight = Math.min(userInput.scrollHeight, 150);
+    userInput.style.height = newHeight + 'px';
+    conversation.scrollTop = conversation.scrollHeight;
   }
   userInput.addEventListener('input', resizeTextarea);
 
-  // Force Enter = newline sa lahat ng mobile
+  // ================= Force Enter = newline =================
   userInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       const start = userInput.selectionStart;
       const end = userInput.selectionEnd;
-      userInput.value =
-        userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
+      userInput.value = userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
       userInput.selectionStart = userInput.selectionEnd = start + 1;
       resizeTextarea();
     }
   });
 
-  // Prevent mobile keyboards na mag-send kapag Enter
   userInput.addEventListener('beforeinput', (e) => {
     if (e.inputType === 'insertParagraph') {
       e.preventDefault();
       const start = userInput.selectionStart;
       const end = userInput.selectionEnd;
-      userInput.value =
-        userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
+      userInput.value = userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
       userInput.selectionStart = userInput.selectionEnd = start + 1;
       resizeTextarea();
     }
   });
 
-  // Send button
-  sendBtn.addEventListener('click', () => {
-    const message = userInput.value.trim();
-    if (!message) return;
-
+  // ================= Send message =================
+  function addMessage(text, sender) {
     const msgDiv = document.createElement('div');
-    msgDiv.className = 'message user';
-    msgDiv.textContent = message;
+    msgDiv.className = `message ${sender}`;
+    msgDiv.textContent = text;
     conversation.appendChild(msgDiv);
-
     conversation.scrollTop = conversation.scrollHeight;
+  }
+
+  function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    if (welcomeMessage.style.display !== 'none') {
+      welcomeMessage.style.display = 'none';
+      conversation.style.display = 'flex';
+    }
+
+    addMessage(text, 'user');
     userInput.value = '';
     resizeTextarea();
 
     setTimeout(() => {
-      const aiDiv = document.createElement('div');
-      aiDiv.className = 'message ai';
-      aiDiv.textContent = "AI reply to: " + message;
-      conversation.appendChild(aiDiv);
-      conversation.scrollTop = conversation.scrollHeight;
+      addMessage("AI reply to: " + text, 'ai');
     }, 500);
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+
+  // ================= Mobile viewport fix =================
+  function setViewportHeight() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  setViewportHeight();
+  window.addEventListener('resize', setViewportHeight);
+  window.addEventListener('orientationchange', setViewportHeight);
+
+  // ================= Focus handling =================
+  userInput.addEventListener('focus', () => {
+    setTimeout(() => {
+      userInput.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }, 300);
   });
-
-  // Mobile-friendly Enter hints
-  userInput.setAttribute('enterkeyhint', 'enter');
-  userInput.setAttribute('inputmode', 'text');
-
-  // Prevent form submission kung nasa form
-  userInput.form?.addEventListener('submit', (e) => e.preventDefault());
 });
-
-// Mobile viewport fix
-function setViewportHeight() {
-  let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-}
-setViewportHeight();
-window.addEventListener('resize', setViewportHeight);
-window.addEventListener('orientationchange', setViewportHeight);
