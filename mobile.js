@@ -1,4 +1,4 @@
-const form = document.getElementById('chat-form'); // new: wrap textarea sa form
+const form = document.getElementById('chat-form');
 const textarea = document.getElementById('user-input');
 const conversation = document.getElementById('conversation');
 
@@ -11,29 +11,21 @@ function addMessage(msg, sender = 'user') {
     conversation.scrollTop = conversation.scrollHeight;
 }
 
-// Prevent default form submit
+// Prevent default form submit (important for mobile)
 form.addEventListener('submit', function(e) {
-    e.preventDefault(); // important: pigilan ang auto-send sa mobile
-    sendMessage();       // tawagin ang sendMessage function kapag pindot Send button
+    e.preventDefault(); // pigilan ang automatic send
+    sendMessage();       // send kapag Send button lang
 });
 
-// Handle Enter & Shift+Enter manually
+// Handle Enter (mobile & desktop)
 textarea.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault(); // pigilan ang auto-send
-        // Enter sa mobile: puwede rin mag-send dito kung gusto mo
-        // Sa current setup, Enter lang mag-i-insert ng newline
+    if (e.key === 'Enter') {
+        e.preventDefault(); // always prevent default send
+        // Insert newline at cursor position
         const start = textarea.selectionStart;
         const end = textarea.selectionEnd;
         textarea.value = textarea.value.substring(0, start) + "\n" + textarea.value.substring(end);
         textarea.selectionStart = textarea.selectionEnd = start + 1;
-    } else if (e.key === 'Enter' && e.shiftKey) {
-        // Shift+Enter → newline
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        textarea.value = textarea.value.substring(0, start) + "\n" + textarea.value.substring(end);
-        textarea.selectionStart = textarea.selectionEnd = start + 1;
-        e.preventDefault();
     }
 });
 
