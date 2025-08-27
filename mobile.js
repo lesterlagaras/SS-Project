@@ -13,29 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   userInput.addEventListener('input', resizeTextarea);
 
-  // ================= Force Enter = newline =================
-  userInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      const start = userInput.selectionStart;
-      const end = userInput.selectionEnd;
-      userInput.value = userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
-      userInput.selectionStart = userInput.selectionEnd = start + 1;
-      resizeTextarea();
-    }
-  });
-
-  userInput.addEventListener('beforeinput', (e) => {
-    if (e.inputType === 'insertParagraph') {
-      e.preventDefault();
-      const start = userInput.selectionStart;
-      const end = userInput.selectionEnd;
-      userInput.value = userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
-      userInput.selectionStart = userInput.selectionEnd = start + 1;
-      resizeTextarea();
-    }
-  });
-
   // ================= Send message =================
   function addMessage(text, sender) {
     const msgDiv = document.createElement('div');
@@ -64,6 +41,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   sendBtn.addEventListener('click', sendMessage);
+
+  // ================= Enter behavior =================
+  // Shift+Enter = newline, Enter = send
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      if (e.shiftKey) {
+        // Shift+Enter = newline
+        resizeTextarea();
+      } else {
+        e.preventDefault();
+        sendMessage(); // Enter = send
+      }
+    }
+  });
 
   // ================= Mobile viewport fix =================
   function setViewportHeight() {
