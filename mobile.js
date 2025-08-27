@@ -11,33 +11,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   userInput.addEventListener('input', resizeTextarea);
 
-  // Enter key = new line (not send) - para sa mobile at desktop
+  // Enter key = newline only (Shift+Enter for manual newline)
   userInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // wag isend
+      e.preventDefault();
       const start = userInput.selectionStart;
       const end = userInput.selectionEnd;
       userInput.value =
-        userInput.value.substring(0, start) +
-        "\n" +
-        userInput.value.substring(end);
+        userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
       userInput.selectionStart = userInput.selectionEnd = start + 1;
       resizeTextarea();
     }
   });
 
-  // Send button
+  // Send button functionality
   sendBtn.addEventListener('click', () => {
     const message = userInput.value.trim();
     if (!message) return;
 
-    // User message
+    // Add user message
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message user';
     msgDiv.textContent = message;
     conversation.appendChild(msgDiv);
 
-    // Auto scroll
+    // Scroll to bottom
     conversation.scrollTop = conversation.scrollHeight;
 
     // Clear input
@@ -55,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Mobile viewport height fix
+// Mobile viewport fix
 function setViewportHeight() {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--vh', `${vh}px`);

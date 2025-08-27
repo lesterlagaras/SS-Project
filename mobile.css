@@ -11,17 +11,7 @@ html, body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  height: var(--vh, 100vh); /* fix for mobile viewport */
-}
-
-/* Header */
-#header {
-  flex-shrink: 0;
-  padding: 12px;
-  text-align: center;
-  font-weight: bold;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  height: var(--vh, 100vh); /* mobile fix */
 }
 
 /* Conversation area */
@@ -92,3 +82,29 @@ html, body {
   font-size: 14px;
   cursor: pointer;
 }
+
+#send-btn:hover { opacity: 0.9; transition: 0.2s; }
+
+/* Optional: smooth scroll on mobile */
+#conversation {
+  scroll-behavior: smooth;
+}
+
+/* Dark mode adjustments */
+body.dark-mode {
+  background: #121212;
+}
+
+body.dark-mode #conversation .message.user {
+  background: #ffffff;
+  color: #000;
+}
+
+body.dark-mode #conversation .message.ai {
+  background: #2c2c2e;
+  color: #fff;
+}
+
+body.dark-mode #input-bar { background: #1e1e1e; }
+body.dark-mode #user-input { background: #2c2c2e; color: #fff; }
+body.dark-mode #send-btn { background: #ffffff; color: #000; }
