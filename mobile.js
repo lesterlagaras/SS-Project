@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   sendBtn.addEventListener('click', sendMessage);
 
+  // ================= Enter key = newline =================
+  // Allow default browser behavior, do NOT intercept Enter
+  // Shift+Enter or Enter will insert newline automatically
+  // No manual \n insertion needed
+
   // ================= Mobile viewport fix =================
   function setViewportHeight() {
     let vh = window.innerHeight * 0.01;
@@ -51,11 +56,4 @@ document.addEventListener('DOMContentLoaded', () => {
   setViewportHeight();
   window.addEventListener('resize', setViewportHeight);
   window.addEventListener('orientationchange', setViewportHeight);
-
-  // ================= Focus handling =================
-  userInput.addEventListener('focus', () => {
-    setTimeout(() => {
-      userInput.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    }, 300);
-  });
 });
