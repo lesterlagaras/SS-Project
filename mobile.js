@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendBtn = document.getElementById('send-btn');
   const welcomeMessage = document.getElementById('welcome-message');
 
-  // ================= Auto-resize textarea =================
+  // Auto-resize textarea
   function resizeTextarea() {
     userInput.style.height = 'auto';
     const newHeight = Math.min(userInput.scrollHeight, 150);
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   userInput.addEventListener('input', resizeTextarea);
 
-  // ================= Send message =================
+  // Add message
   function addMessage(text, sender) {
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${sender}`;
@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     conversation.scrollTop = conversation.scrollHeight;
   }
 
+  // Send message
   function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
@@ -35,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     userInput.value = '';
     resizeTextarea();
 
-    // Simulate AI reply
     setTimeout(() => {
       addMessage("AI reply to: " + text, 'ai');
     }, 500);
@@ -43,12 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   sendBtn.addEventListener('click', sendMessage);
 
-  // ================= Enter key = newline =================
-  // Allow default browser behavior, do NOT intercept Enter
-  // Shift+Enter or Enter will insert newline automatically
-  // No manual \n insertion needed
-
-  // ================= Mobile viewport fix =================
+  // Mobile viewport fix
   function setViewportHeight() {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -56,4 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
   setViewportHeight();
   window.addEventListener('resize', setViewportHeight);
   window.addEventListener('orientationchange', setViewportHeight);
+
+  // Focus handling
+  userInput.addEventListener('focus', () => {
+    setTimeout(() => {
+      userInput.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }, 300);
+  });
 });
