@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const conversation = document.getElementById('conversation');
   const sendBtn = document.getElementById('send-btn');
 
-  // Auto-resize textarea
+  // Auto-resize
   function resizeTextarea() {
     userInput.style.height = 'auto';
     userInput.style.height = Math.min(userInput.scrollHeight, 150) + 'px';
   }
   userInput.addEventListener('input', resizeTextarea);
 
-  // Enter key = newline only
+  // Force Enter = newline sa lahat ng mobile
   userInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -23,12 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Mobile-friendly Enter behavior
-  userInput.setAttribute('enterkeyhint', 'enter'); // hint para newline
-  userInput.setAttribute('inputmode', 'text');
-
-  // Optional: prevent form submission kung nasa <form>
-  userInput.form?.addEventListener('submit', (e) => e.preventDefault());
+  // Prevent mobile keyboards na mag-send kapag Enter
+  userInput.addEventListener('beforeinput', (e) => {
+    if (e.inputType === 'insertParagraph') {
+      e.preventDefault();
+      const start = userInput.selectionStart;
+      const end = userInput.selectionEnd;
+      userInput.value =
+        userInput.value.substring(0, start) + "\n" + userInput.value.substring(end);
+      userInput.selectionStart = userInput.selectionEnd = start + 1;
+      resizeTextarea();
+    }
+  });
 
   // Send button
   sendBtn.addEventListener('click', () => {
@@ -52,6 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
       conversation.scrollTop = conversation.scrollHeight;
     }, 500);
   });
+
+  // Mobile-friendly Enter hints
+  userInput.setAttribute('enterkeyhint', 'enter');
+  userInput.setAttribute('inputmode', 'text');
+
+  // Prevent form submission kung nasa form
+  userInput.form?.addEventListener('submit', (e) => e.preventDefault());
 });
 
 // Mobile viewport fix
