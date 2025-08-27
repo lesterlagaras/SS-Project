@@ -61,3 +61,9 @@ function setViewportHeight() {
 setViewportHeight();
 window.addEventListener('resize', setViewportHeight);
 window.addEventListener('orientationchange', setViewportHeight);
+// Mobile-friendly Enter behavior: Enter = newline, Send button lang ang mag-send
+userInput.setAttribute('enterkeyhint', 'enter'); // hints mobile keyboard na Enter = newline
+userInput.setAttribute('inputmode', 'text'); // siguraduhing text input mode
+
+// Optional: prevent form submission on Enter (kung nasa <form>)
+userInput.form?.addEventListener('submit', (e) => e.preventDefault());
