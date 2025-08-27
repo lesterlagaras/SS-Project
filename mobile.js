@@ -8,10 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     userInput.style.height = 'auto';
     userInput.style.height = Math.min(userInput.scrollHeight, 150) + 'px';
   }
-
   userInput.addEventListener('input', resizeTextarea);
 
-  // Enter key = newline only (Shift+Enter for manual newline)
+  // Enter key = newline only
   userInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -24,25 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Send button functionality
+  // Mobile-friendly Enter behavior
+  userInput.setAttribute('enterkeyhint', 'enter'); // hint para newline
+  userInput.setAttribute('inputmode', 'text');
+
+  // Optional: prevent form submission kung nasa <form>
+  userInput.form?.addEventListener('submit', (e) => e.preventDefault());
+
+  // Send button
   sendBtn.addEventListener('click', () => {
     const message = userInput.value.trim();
     if (!message) return;
 
-    // Add user message
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message user';
     msgDiv.textContent = message;
     conversation.appendChild(msgDiv);
 
-    // Scroll to bottom
     conversation.scrollTop = conversation.scrollHeight;
-
-    // Clear input
     userInput.value = '';
     resizeTextarea();
 
-    // Simulate AI reply
     setTimeout(() => {
       const aiDiv = document.createElement('div');
       aiDiv.className = 'message ai';
@@ -61,9 +62,3 @@ function setViewportHeight() {
 setViewportHeight();
 window.addEventListener('resize', setViewportHeight);
 window.addEventListener('orientationchange', setViewportHeight);
-// Mobile-friendly Enter behavior: Enter = newline, Send button lang ang mag-send
-userInput.setAttribute('enterkeyhint', 'enter'); // hints mobile keyboard na Enter = newline
-userInput.setAttribute('inputmode', 'text'); // siguraduhing text input mode
-
-// Optional: prevent form submission on Enter (kung nasa <form>)
-userInput.form?.addEventListener('submit', (e) => e.preventDefault());
