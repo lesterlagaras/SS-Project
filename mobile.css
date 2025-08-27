@@ -6,65 +6,290 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  display: flex;
-  flex-direction: column;
   height: 100vh;
+  display: flex;
+  justify-content: center;
   background: #fafafa;
 }
 
 #chat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* start sa top */
+  align-items: center;         /* center horizontally */
+  padding: 20px 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#conversation {
+  display: flex;
+  width: 100%;
   flex: 1;
+  flex-direction: column;
+  gap: 12px;
   overflow-y: auto;
-  padding: 10px;
+  padding: 0 16px;
+  margin-bottom: 160px; /* space for input bar */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable both-edges;
+  border-radius: 10px;
 }
 
 #conversation div {
-  margin-bottom: 8px;
-  padding: 6px 10px;
-  border-radius: 10px;
-  max-width: 80%;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  max-width: 70%;  /* mas malapad pero may breathing space */
+  word-wrap: break-word;
 }
 
 #conversation .user {
   background: #dcf8c6;
-  align-self: flex-end;
+  align-self: flex-end; /* kanan */
+  text-align: right;
 }
 
 #conversation .bot {
   background: #fff;
-  align-self: flex-start;
-}
-
-#welcome-message {
-  margin-bottom: 10px;
-  color: #666;
+  align-self: flex-start; /* kaliwa */
+  text-align: left;
 }
 
 #input-bar {
-  padding: 10px;
-  background: #eee;
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%; /* pwede mong gawing 80% para mas maliit */
+  max-width: 700px;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 #chat-form {
   display: flex;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 #user-input {
   flex: 1;
-  resize: none;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 10px 14px;
+  border-radius: 18px;
+  border: none;
   font-size: 16px;
-  min-height: 40px;
+  min-height: 44px;
+  max-height: 120px;
+  overflow-y: auto;
+  outline: none;
+  background: transparent; /* tanggal border box style */
+  resize: none;
 }
 
 #send-btn {
-  margin-left: 8px;
-  padding: 8px 12px;
+  padding: 10px 16px;
   border: none;
   background: #4CAF50;
   color: white;
-  border-radius: 8px;
+  border-radius: 18px;
   font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
+
+/* ================= Options Button & Menu ================= */
+.option-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.option-menu {
+  position: fixed;
+  top: 60px;
+  left: 20px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  display: none;
+  z-index: 1001;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: fit-content;
+  min-width: max-content;
+  flex-direction: column;
+}
+
+.option-btn-item {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+/* ================= Panels ================= */
+.panel {
+  display: none;
+  position: fixed;
+  right: 20px;
+  top: 80px;
+  width: 350px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 2000;
+  flex-direction: column;
+}
+
+.notes-panel { width: 300px; height: 250px; }
+.calendar-panel { height: 400px; }
+.all-events-panel { max-height: 400px; overflow-y: auto; }
+
+/* Panel header */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.panel-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.panel-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.panel-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.panel-textarea {
+  flex-grow: 1;
+  width: 100%;
+  resize: none;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 8px;
+}
+
+.save-btn {
+  background: #858686;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.save-btn:hover { background: #818382; }
+
+/* ================= Calendar ================= */
+.calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  gap: 2px;
+  text-align: center;
+}
+
+.panel-input {
+  width: 100%;
+  margin-top: 5px;
+  padding: 5px;
+}
+
+/* ================= Events List ================= */
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.events-list .event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f5f5f5;
+}
+
+/* ================= Dark Mode ================= */
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode #chat-container { background: #121212; }
+
+body.dark-mode #conversation .user-message { background-color: #ffffff; color: #000000; }
+body.dark-mode #conversation .ai-message { background-color: #2c2c2e; color: #fff; }
+
+body.dark-mode #input-bar { background: #1e1e1e; border: 1px solid #333; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+body.dark-mode #user-input { background: #2c2c2e; color: #fff; }
+
+body.dark-mode #welcome-message { color: #ffffff; }
+
+body.dark-mode .option-menu { background: #1e1e1e; border: 1px solid #333; color: #fff; }
+body.dark-mode .option-btn-item { background: #ffffff; color: #000; }
+body.dark-mode .option-btn-item:hover { background: #bbecf0; }
+
+body.dark-mode .panel { background: #1e1e1e; border: 1px solid #333; }
+body.dark-mode .panel-textarea { background: #2c2c2e; color: #fff; border: 1px solid #444; }
+body.dark-mode .save-btn { background: #000000; }
+body.dark-mode .save-btn:hover { background: #000000; }
+
+body.dark-mode .events-list .event-item { background: #3a3a3a; border: 1px solid #555; color: #fff; }
+
+/* ================= Buttons hover (general) ================= */
+button:hover { opacity: 0.9; transition: 0.2s; }
+
+/* Welcome message style */
+#welcome-message {
+  text-align: center;
+  font-size: 1.6rem;       /* medyo malaki */
+  font-weight: 600;
+  background-color: #f0f0f0; /* bubble style */
+  color: #555;
+  padding: 12px 18px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  max-width: 90%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.dark-mode #welcome-message {
+  background-color: #2c2c2c;
+  color: #fff;
+}
+
+
+
