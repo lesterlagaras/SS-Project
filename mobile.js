@@ -11,17 +11,16 @@ function addMessage(msg, sender = 'user') {
     conversation.scrollTop = conversation.scrollHeight;
 }
 
-// Prevent default form submit (important for mobile)
-form.addEventListener('submit', function(e) {
-    e.preventDefault(); // pigilan ang automatic send
-    sendMessage();       // send kapag Send button lang
+// Prevent default form submit (important sa mobile)
+form.addEventListener('submit', e => {
+    e.preventDefault(); // pigilan ang auto-send
+    sendMessage();       // Send button lang ang magse-send
 });
 
-// Handle Enter (mobile & desktop)
-textarea.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault(); // always prevent default send
-        // Insert newline at cursor position
+// Always insert newline on Enter (mobile & desktop)
+textarea.addEventListener('keydown', e => {
+    if(e.key === 'Enter') {
+        e.preventDefault(); // pigilan ang auto-send
         const start = textarea.selectionStart;
         const end = textarea.selectionEnd;
         textarea.value = textarea.value.substring(0, start) + "\n" + textarea.value.substring(end);
@@ -35,7 +34,8 @@ document.getElementById('send-btn').addEventListener('click', sendMessage);
 // Send message function
 function sendMessage() {
     const msg = textarea.value.trim();
-    if (!msg) return;
+    if(!msg) return;
+
     addMessage(msg, 'user');
     textarea.value = '';
 

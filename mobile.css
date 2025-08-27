@@ -41,9 +41,12 @@ body {
 }
 
 #input-bar {
-  display: flex;
   padding: 10px;
   background: #eee;
+}
+
+#chat-form {
+  display: flex;
 }
 
 #user-input {
