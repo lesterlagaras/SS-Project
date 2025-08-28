@@ -297,128 +297,146 @@ fullScreenNotesBtn.addEventListener("click", ()=>{
 });
 
 // ================= Calendar =================
-let currentDate = new Date();
-let calendarEvents = JSON.parse(localStorage.getItem('calendarEvents')) || [];
-let selectedDay = null;
+document.addEventListener('DOMContentLoaded', () => {
+  let currentDate = new Date();
+  let calendarEvents = JSON.parse(localStorage.getItem('calendarEvents')) || [];
+  let selectedDay = null;
 
-const calendarGrid = document.getElementById('calendar-grid');
-const monthYearLabel = document.getElementById('month-year');
-const prevMonthBtn = document.getElementById('prev-month');
-const nextMonthBtn = document.getElementById('next-month');
-const eventTextInput = document.getElementById('event-text');
-const addCalendarEventBtn = document.getElementById('add-calendar-event');
-const calendarBtn = document.getElementById('calendar-btn');
-const closeCalendar = document.getElementById('close-calendar');
+  const calendarPanel = document.getElementById('calendar-panel');
+  const calendarGrid = document.getElementById('calendar-grid');
+  const monthYearLabel = document.getElementById('month-year');
+  const prevMonthBtn = document.getElementById('prev-month');
+  const nextMonthBtn = document.getElementById('next-month');
+  const eventTextInput = document.getElementById('event-text');
+  const addCalendarEventBtn = document.getElementById('add-calendar-event');
+  const calendarBtn = document.getElementById('calendar-btn');
+  const closeCalendar = document.getElementById('close-calendar');
 
-function saveEvents(){
-  localStorage.setItem('calendarEvents', JSON.stringify(calendarEvents));
-}
+  function saveEvents() {
+    localStorage.setItem('calendarEvents', JSON.stringify(calendarEvents));
+  }
 
-function renderCalendar(){
-  calendarGrid.innerHTML = '';
-  const today = new Date();
+  function renderCalendar() {
+    calendarGrid.innerHTML = '';
+    const today = new Date();
 
-  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{
-    const hd = document.createElement('div');
-    hd.textContent = d;
-    hd.style.fontWeight = 'bold';
-    hd.style.textAlign = 'center';
-    hd.style.padding = '6px 0';
-    calendarGrid.appendChild(hd);
-  });
-
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-
-  monthYearLabel.textContent = `${currentDate.toLocaleString('default',{month:'long'})} ${year} - Today: ${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month+1, 0).getDate();
-
-  for(let i=0;i<firstDay;i++) calendarGrid.appendChild(document.createElement('div'));
-
-  for(let day=1;day<=daysInMonth;day++){
-    const dayDiv = document.createElement('div');
-    dayDiv.textContent = day;
-    dayDiv.style.padding = '6px';
-    dayDiv.style.border = '1px solid #ccc';
-    dayDiv.style.textAlign = 'center';
-    dayDiv.style.cursor = 'pointer';
-
-    const dayKey = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    if(calendarEvents.filter(e=>e.date===dayKey).length>0){
-      dayDiv.style.fontWeight='bold';
-      dayDiv.title = calendarEvents.filter(e=>e.date===dayKey).map(e=>e.text).join('\n');
-    }
-
-    if(selectedDay===day){
-      dayDiv.style.background='#949694ff';
-      dayDiv.style.color='white';
-    }
-
-    if(day===today.getDate() && month===today.getMonth() && year===today.getFullYear()){
-      dayDiv.style.borderRadius='50%';
-      dayDiv.style.border='2px solid #2196F3';
-      dayDiv.style.fontWeight='bold';
-    }
-
-    dayDiv.addEventListener('click', ()=>{
-      selectedDay = day;
-      renderCalendar();
+    ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+      const hd = document.createElement('div');
+      hd.textContent = d;
+      hd.style.fontWeight = 'bold';
+      hd.style.textAlign = 'center';
+      hd.style.padding = '6px 0';
+      calendarGrid.appendChild(hd);
     });
 
-    calendarGrid.appendChild(dayDiv);
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    monthYearLabel.textContent = `${currentDate.toLocaleString('default',{month:'long'})} ${year} - Today: ${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+
+    for(let i=0; i<firstDay; i++) calendarGrid.appendChild(document.createElement('div'));
+
+    for(let day=1; day<=daysInMonth; day++){
+      const dayDiv = document.createElement('div');
+      dayDiv.textContent = day;
+      dayDiv.style.padding = '6px';
+      dayDiv.style.border = '1px solid #ccc';
+      dayDiv.style.textAlign = 'center';
+      dayDiv.style.cursor = 'pointer';
+
+      const dayKey = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const eventsForDay = calendarEvents.filter(e => e.date === dayKey);
+      if(eventsForDay.length > 0){
+        dayDiv.style.fontWeight='bold';
+        dayDiv.title = eventsForDay.map(e => e.text).join('\n');
+      }
+
+      if(selectedDay === day){
+        dayDiv.style.background = '#949694ff';
+        dayDiv.style.color = 'white';
+      }
+
+      if(day === today.getDate() && month === today.getMonth() && year === today.getFullYear()){
+        dayDiv.style.borderRadius = '50%';
+        dayDiv.style.border = '2px solid #2196F3';
+        dayDiv.style.fontWeight = 'bold';
+      }
+
+      dayDiv.addEventListener('click', () => {
+        selectedDay = day;
+        renderCalendar();
+      });
+
+      calendarGrid.appendChild(dayDiv);
+    }
   }
-}
 
-// ================= Scroll input into view for mobile keyboard =================
-eventTextInput.addEventListener('focus', () => {
-  setTimeout(() => {
-    eventTextInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 300); // delay to allow keyboard to appear
-});
+  // ================= Scroll calendar panel for mobile keyboard =================
+  eventTextInput.addEventListener('focus', () => {
+    setTimeout(() => {
+      if(calendarPanel){
+        calendarPanel.scrollTo({
+          top: eventTextInput.offsetTop - 20,
+          behavior: 'smooth'
+        });
+      }
+    }, 300);
+  });
 
-// ================= Calendar Button Listeners =================
-prevMonthBtn.addEventListener('click', ()=>{
-  currentDate.setMonth(currentDate.getMonth()-1);
-  selectedDay = null;
-  renderCalendar();
-});
-nextMonthBtn.addEventListener('click', ()=>{
-  currentDate.setMonth(currentDate.getMonth()+1);
-  selectedDay = null;
-  renderCalendar();
-});
-addCalendarEventBtn.addEventListener('click', ()=>{
-  if(!selectedDay || !eventTextInput.value.trim()){
-    alert('Please select a day and enter event text.');
-    return;
-  }
-  const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(selectedDay).padStart(2,'0')}`;
-  calendarEvents.push({date: dateKey, text: eventTextInput.value.trim()});
-  saveEvents();
-  eventTextInput.value = '';
-  renderCalendar();
-});
-calendarBtn.addEventListener('click', ()=>{
-  calendarPanel.style.display = calendarPanel.style.display==='flex'?'none':'flex';
-  notesPanel.style.display = 'none';
-  allEventsPanel.style.display = 'none';
-  optionMenu.style.display = 'none';
-});
-closeCalendar.addEventListener('click', ()=>calendarPanel.style.display='none');
+  eventTextInput.addEventListener('blur', () => {
+    if(calendarPanel){
+      calendarPanel.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  });
 
-// Auto-refresh every minute
-setInterval(()=>{
-  const now = new Date();
-  if(now.getDate() !== currentDate.getDate() ||
-     now.getMonth() !== currentDate.getMonth() ||
-     now.getFullYear() !== currentDate.getFullYear()){
-    currentDate = now;
+  // ================= Calendar Button Listeners =================
+  prevMonthBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth()-1);
     selectedDay = null;
     renderCalendar();
-  }
-}, 60000);
+  });
 
-// Initial render
-renderCalendar();
+  nextMonthBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth()+1);
+    selectedDay = null;
+    renderCalendar();
+  });
+
+  addCalendarEventBtn.addEventListener('click', () => {
+    if(!selectedDay || !eventTextInput.value.trim()){
+      alert('Please select a day and enter event text.');
+      return;
+    }
+    const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(selectedDay).padStart(2,'0')}`;
+    calendarEvents.push({date: dateKey, text: eventTextInput.value.trim()});
+    saveEvents();
+    eventTextInput.value = '';
+    renderCalendar();
+  });
+
+  calendarBtn.addEventListener('click', () => {
+    calendarPanel.style.display = calendarPanel.style.display==='flex'?'none':'flex';
+  });
+
+  closeCalendar.addEventListener('click', () => calendarPanel.style.display = 'none');
+
+  // Auto-refresh every minute
+  setInterval(() => {
+    const now = new Date();
+    if(now.getDate() !== currentDate.getDate() ||
+       now.getMonth() !== currentDate.getMonth() ||
+       now.getFullYear() !== currentDate.getFullYear()){
+      currentDate = now;
+      selectedDay = null;
+      renderCalendar();
+    }
+  }, 60000);
+
+  // Initial render
+  renderCalendar();
+});
