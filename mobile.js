@@ -264,21 +264,31 @@ let isNotesFullscreen = false;
 fullScreenNotesBtn.addEventListener("click", ()=>{
   if(!isNotesFullscreen){
     notesPanel.style.position = "fixed";
-    notesPanel.style.top = "0";
-    notesPanel.style.left = "0";
+    notesPanel.style.top = "50%";
+    notesPanel.style.left = "50%";
+    notesPanel.style.transform = "translate(-50%, -50%)"; // center in viewport
     notesPanel.style.width = "100vw";
     notesPanel.style.height = "100vh";
     notesPanel.style.zIndex = "9999";
     notesPanel.style.borderRadius = "0";
+    notesPanel.style.display = "flex";
+    notesPanel.style.flexDirection = "column";
+    notesPanel.style.justifyContent = "center";
+    notesPanel.style.alignItems = "center";
     fullScreenNotesBtn.textContent = "🗗 Minimize";
   } else {
     notesPanel.style.position = "";
     notesPanel.style.top = "";
     notesPanel.style.left = "";
+    notesPanel.style.transform = "";
     notesPanel.style.width = "";
     notesPanel.style.height = "";
     notesPanel.style.zIndex = "";
     notesPanel.style.borderRadius = "";
+    notesPanel.style.display = "";
+    notesPanel.style.flexDirection = "";
+    notesPanel.style.justifyContent = "";
+    notesPanel.style.alignItems = "";
     fullScreenNotesBtn.textContent = "⛶ Fullscreen";
   }
   isNotesFullscreen = !isNotesFullscreen;
