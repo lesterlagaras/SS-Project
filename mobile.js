@@ -263,10 +263,11 @@ closeNotes.addEventListener("click", ()=> notesPanel.style.display = "none");
 let isNotesFullscreen = false;
 fullScreenNotesBtn.addEventListener("click", ()=>{
   if(!isNotesFullscreen){
+    // Fullscreen mode
     notesPanel.style.position = "fixed";
     notesPanel.style.top = "50%";
     notesPanel.style.left = "50%";
-    notesPanel.style.transform = "translate(-50%, -50%)"; // center in viewport
+    notesPanel.style.transform = "translate(-50%, -50%)";
     notesPanel.style.width = "100vw";
     notesPanel.style.height = "100vh";
     notesPanel.style.zIndex = "9999";
@@ -277,6 +278,7 @@ fullScreenNotesBtn.addEventListener("click", ()=>{
     notesPanel.style.alignItems = "center";
     fullScreenNotesBtn.textContent = "🗗 Minimize";
   } else {
+    // Exit fullscreen but keep panel visible and centered
     notesPanel.style.position = "";
     notesPanel.style.top = "";
     notesPanel.style.left = "";
@@ -285,7 +287,7 @@ fullScreenNotesBtn.addEventListener("click", ()=>{
     notesPanel.style.height = "";
     notesPanel.style.zIndex = "";
     notesPanel.style.borderRadius = "";
-    notesPanel.style.display = "";
+    notesPanel.style.display = "flex"; // keep visible
     notesPanel.style.flexDirection = "";
     notesPanel.style.justifyContent = "";
     notesPanel.style.alignItems = "";
