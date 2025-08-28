@@ -1,59 +1,82 @@
+/* ================= Main ================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   font-family: 'Inter', sans-serif;
-  height: 100vh;
   display: flex;
   justify-content: center;
   background: #fafafa;
 }
 
+/* ================= Chat ================= */
 #chat-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* start sa top */
-  align-items: center;         /* center horizontally */
-  padding: 20px 10px;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  min-height: 100vh;
+  padding: 0 10px;
   box-sizing: border-box;
 }
 
 #conversation {
   display: flex;
   width: 100%;
-  flex: 1;
+  flex: 0 0 auto;
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
   padding: 0 16px;
-  margin-bottom: 160px; /* space for input bar */
+  max-height: 60vh;
+  border-radius: 10px;
   -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable both-edges;
-  border-radius: 10px;
 }
 
 #conversation div {
   margin-bottom: 10px;
   padding: 10px 14px;
   border-radius: 14px;
-  max-width: 70%;  /* mas malapad pero may breathing space */
+  max-width: 70%;
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
+/* Light mode */
 #conversation .user {
-  background: #dcf8c6;
-  align-self: flex-end; /* kanan */
-  text-align: right;
+  background: #e0e0e0;
+  color: #000000;
+  align-self: flex-end; /* user sa kanan */
+  text-align: left;
 }
 
 #conversation .bot {
-  background: #fff;
-  align-self: flex-start; /* kaliwa */
+  background: #ffffff;
+  color: #000000;
+  align-self: flex-start; /* bot sa kaliwa */
   text-align: left;
+}
+
+/* Dark mode */
+body.dark-mode #conversation .user {
+  background: #4a90e2; /* blue bubble for user */
+  color: #ffffff;
+  align-self: flex-end;
+}
+
+body.dark-mode #conversation .bot {
+  background: #2c2c2e;
+  color: #ffffff;
+  align-self: flex-start;
 }
 
 #input-bar {
@@ -61,12 +84,18 @@ body {
   bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%; /* pwede mong gawing 80% para mas maliit */
+  width: 90%;
   max-width: 700px;
   background: #fff;
   padding: 8px 12px;
   border-radius: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+body.dark-mode #input-bar {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 #chat-form {
@@ -82,22 +111,31 @@ body {
   border: none;
   font-size: 16px;
   min-height: 44px;
-  max-height: 120px;
+  max-height: 140px;
   overflow-y: auto;
   outline: none;
-  background: transparent; /* tanggal border box style */
+  background: transparent;
   resize: none;
+  color: #000000;
 }
 
-#send-btn {
-  padding: 10px 16px;
-  border: none;
-  background: #4CAF50;
-  color: white;
-  border-radius: 18px;
-  font-size: 16px;
-  cursor: pointer;
-  flex-shrink: 0;
+body.dark-mode #user-input {
+  color: #ffffff;
+}
+
+/* ================= Welcome Message ================= */
+#welcome-message {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background-color: #f0f0f0;
+  color: #000 !important;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin: 20px auto;
+  width: fit-content;
+  max-width: 95%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 /* ================= Options Button & Menu ================= */
@@ -250,13 +288,13 @@ body.dark-mode {
 
 body.dark-mode #chat-container { background: #121212; }
 
-body.dark-mode #conversation .user-message { background-color: #ffffff; color: #000000; }
-body.dark-mode #conversation .ai-message { background-color: #2c2c2e; color: #fff; }
+body.dark-mode #conversation .user { background-color: #1a1a1a; color: #fff; }
+body.dark-mode #conversation .bot { background-color: #2c2c2e; color: #fff; }
 
 body.dark-mode #input-bar { background: #1e1e1e; border: 1px solid #333; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
 body.dark-mode #user-input { background: #2c2c2e; color: #fff; }
 
-body.dark-mode #welcome-message { color: #ffffff; }
+body.dark-mode #welcome-message { background-color: #2c2c2c; color: #fff !important; }
 
 body.dark-mode .option-menu { background: #1e1e1e; border: 1px solid #333; color: #fff; }
 body.dark-mode .option-btn-item { background: #ffffff; color: #000; }
@@ -264,32 +302,22 @@ body.dark-mode .option-btn-item:hover { background: #bbecf0; }
 
 body.dark-mode .panel { background: #1e1e1e; border: 1px solid #333; }
 body.dark-mode .panel-textarea { background: #2c2c2e; color: #fff; border: 1px solid #444; }
-body.dark-mode .save-btn { background: #000000; }
-body.dark-mode .save-btn:hover { background: #000000; }
+body.dark-mode .save-btn { background: #000; }
+body.dark-mode .save-btn:hover { background: #000; }
 
 body.dark-mode .events-list .event-item { background: #3a3a3a; border: 1px solid #555; color: #fff; }
 
 /* ================= Buttons hover (general) ================= */
 button:hover { opacity: 0.9; transition: 0.2s; }
 
-/* Welcome message style */
-#welcome-message {
-  text-align: center;
-  font-size: 1.6rem;       /* medyo malaki */
-  font-weight: 600;
-  background-color: #f0f0f0; /* bubble style */
-  color: #555;
-  padding: 12px 18px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  max-width: 90%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+/* ================= Mobile adjustments ================= */
+@media (max-width: 768px) {
+  #chat-container { justify-content: center; align-items: center; padding: 20px 10px; width: 100%; min-height: 100vh; }
+  #welcome-message { margin: 20px auto; font-size: 1.5rem; max-width: 95%; }
+  #conversation { padding: 0 10px; margin-bottom: 140px; }
+  #input-bar { width: 95%; }
+  .panel { width: 90%; right: 50%; transform: translateX(50%); }
+  .notes-panel { width: 90%; height: 250px; }
+  .calendar-panel { width: 90%; height: 400px; }
+  .all-events-panel { width: 90%; max-height: 400px; }
 }
-
-.dark-mode #welcome-message {
-  background-color: #2c2c2c;
-  color: #fff;
-}
-
-
-

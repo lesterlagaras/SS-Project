@@ -80,7 +80,6 @@ closeAllEvents.addEventListener('click', ()=> allEventsPanel.style.display = 'no
 const darkToggle = document.getElementById('dark-toggle');
 const savedMode = localStorage.getItem('chatMode');
 
-// Default light mode
 if(savedMode === 'dark'){
   document.body.classList.add('dark-mode');
 } else {
@@ -97,14 +96,14 @@ darkToggle.addEventListener('click', () => {
 function setDarkMode(isDark) {
   darkToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
 
-  // Panels background and text
+  // Panels
   [notesPanel, calendarPanel, allEventsPanel].forEach(panel => {
     panel.style.backgroundColor = isDark ? '#1e1e1e' : '#fff';
     panel.style.color = isDark ? '#ffffff' : '#000000';
     panel.style.border = isDark ? '1px solid #555' : '1px solid #ccc';
   });
 
-  // Option buttons
+  // Buttons
   const buttons = document.querySelectorAll('#option-menu button, .panel-btn, #send-btn, #add-calendar-event');
   buttons.forEach(btn => {
     btn.style.backgroundColor = isDark ? '#ffffff' : '#d3d3d3';
@@ -117,15 +116,36 @@ function setDarkMode(isDark) {
   });
 
   // Chat messages
-  const chatDivs = document.querySelectorAll('#conversation div');
-  chatDivs.forEach(msg => {
+const chatDivs = document.querySelectorAll('#conversation div');
+chatDivs.forEach(msg => {
+  if(msg.classList.contains('user')){
+    // User bubble: Light grey in light mode, white/light in dark mode
+    msg.style.backgroundColor = isDark ? '#ffffff' : '#e0e0e0';
+    msg.style.color = '#000000';
+    msg.style.alignSelf = 'flex-end'; // user messages on right
+    msg.style.textAlign = 'right';
+  } else if(msg.classList.contains('bot')){
+    // Bot bubble: White in light mode, dark grey in dark mode
+    msg.style.backgroundColor = isDark ? '#2c2c2e' : '#ffffff';
     msg.style.color = isDark ? '#ffffff' : '#000000';
-  });
+    msg.style.alignSelf = 'flex-start'; // bot messages on left
+    msg.style.textAlign = 'left';
+  }
+});
 
   // Welcome message
   if(welcomeMsg){
     welcomeMsg.style.color = isDark ? '#ffffff' : '#888';
   }
+
+  // Input bar
+  const inputBar = document.getElementById('input-bar');
+  inputBar.style.backgroundColor = isDark ? '#1e1e1e' : '#fff';
+  inputBar.style.border = isDark ? '1px solid #333' : 'none';
+  inputBar.style.boxShadow = isDark ? '0 4px 12px rgba(0,0,0,0.4)' : '0 2px 8px rgba(0,0,0,0.1)';
+
+  // Textarea color
+  textarea.style.color = isDark ? '#ffffff' : '#000000';
 }
 
 // ================= Message Handling =================
@@ -141,7 +161,6 @@ function sendMessage() {
   const msg = textarea.value.trim();
   if(!msg) return;
 
-  // Remove welcome message on first send with fade
   if(welcomeMsg){
     welcomeMsg.style.transition = 'opacity 0.3s';
     welcomeMsg.style.opacity = 0;
@@ -241,7 +260,6 @@ notesBtn.addEventListener("click", ()=>{
 
 closeNotes.addEventListener("click", ()=> notesPanel.style.display = "none");
 
-// Fullscreen Notes
 let isNotesFullscreen = false;
 fullScreenNotesBtn.addEventListener("click", ()=>{
   if(!isNotesFullscreen){
@@ -326,7 +344,6 @@ function renderCalendar(){
       dayDiv.style.color='white';
     }
 
-    // Highlight today
     if(day===today.getDate() && month===today.getMonth() && year===today.getFullYear()){
       dayDiv.style.borderRadius='50%';
       dayDiv.style.border='2px solid #2196F3';
@@ -342,7 +359,14 @@ function renderCalendar(){
   }
 }
 
-// Calendar Button Listeners
+// ================= Scroll input into view for mobile keyboard =================
+eventTextInput.addEventListener('focus', () => {
+  setTimeout(() => {
+    eventTextInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300); // delay to allow keyboard to appear
+});
+
+// ================= Calendar Button Listeners =================
 prevMonthBtn.addEventListener('click', ()=>{
   currentDate.setMonth(currentDate.getMonth()-1);
   selectedDay = null;
