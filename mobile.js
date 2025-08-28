@@ -13,68 +13,82 @@ const calendarPanel = document.getElementById('calendar-panel');
 const allEventsPanel = document.getElementById('all-events-panel');
 
 // ================= All Events =================
-const allEventsList = document.getElementById('events-list');
-const allEventsBtn = document.getElementById('view-events-btn');
-const closeAllEvents = document.getElementById('close-events');
+document.addEventListener('DOMContentLoaded', () => {
+  const allEventsPanel = document.getElementById('all-events-panel');
+  const allEventsList = document.getElementById('events-list');
+  const allEventsBtn = document.getElementById('view-events-btn');
+  const closeAllEvents = document.getElementById('close-events');
 
-function renderAllEvents() {
-  allEventsList.innerHTML = '';
-  if(calendarEvents.length === 0){
-    const li = document.createElement('div');
-    li.textContent = "No events yet!";
-    li.style.padding = '4px';
-    allEventsList.appendChild(li);
-    return;
+  // ensure global calendar variables exist
+  if (typeof calendarEvents === 'undefined') window.calendarEvents = [];
+  if (typeof currentDate === 'undefined') window.currentDate = new Date();
+  if (typeof selectedDay === 'undefined') window.selectedDay = null;
+
+  function renderAllEvents() {
+    if (!allEventsList) return; // safe guard
+    allEventsList.innerHTML = '';
+
+    if (!calendarEvents || calendarEvents.length === 0) {
+      const li = document.createElement('div');
+      li.textContent = "No events yet!";
+      li.style.padding = '4px';
+      allEventsList.appendChild(li);
+      return;
+    }
+
+    calendarEvents.forEach((ev, index) => {
+      const li = document.createElement('div');
+      li.style.display = 'flex';
+      li.style.justifyContent = 'space-between';
+      li.style.alignItems = 'center';
+      li.style.padding = '4px 0';
+
+      const textSpan = document.createElement('span');
+      textSpan.textContent = `${ev.date}: ${ev.text}`;
+      textSpan.style.cursor = 'pointer';
+      textSpan.addEventListener('click', () => {
+        const [y, m, d] = ev.date.split('-').map(Number);
+        currentDate.setFullYear(y, m - 1);
+        selectedDay = d;
+
+        if (typeof renderCalendar === 'function') renderCalendar();
+
+        if (allEventsPanel) allEventsPanel.style.display = 'none';
+        if (calendarPanel) calendarPanel.style.display = 'flex';
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.textContent = '❌';
+      delBtn.style.marginLeft = '8px';
+      delBtn.addEventListener('click', () => {
+        if (confirm('Delete this event?')) {
+          calendarEvents.splice(index, 1);
+          localStorage.setItem('calendarEvents', JSON.stringify(calendarEvents));
+          renderAllEvents();
+          if (typeof renderCalendar === 'function') renderCalendar();
+        }
+      });
+
+      li.appendChild(textSpan);
+      li.appendChild(delBtn);
+      allEventsList.appendChild(li);
+    });
   }
 
-  calendarEvents.forEach((ev, index) => {
-    const li = document.createElement('div');
-    li.style.display = 'flex';
-    li.style.justifyContent = 'space-between';
-    li.style.alignItems = 'center';
-    li.style.padding = '4px 0';
-
-    const textSpan = document.createElement('span');
-    textSpan.textContent = `${ev.date}: ${ev.text}`;
-    textSpan.style.cursor = 'pointer';
-    textSpan.addEventListener('click', ()=>{
-      const [y,m,d] = ev.date.split('-').map(Number);
-      currentDate.setFullYear(y, m-1);
-      selectedDay = d;
-      renderCalendar();
-      allEventsPanel.style.display = 'none';
-      calendarPanel.style.display = 'flex';
-    });
-
-    const delBtn = document.createElement('button');
-    delBtn.textContent = '❌';
-    delBtn.style.marginLeft = '8px';
-    delBtn.addEventListener('click', ()=>{
-      if(confirm('Delete this event?')){
-        calendarEvents.splice(index, 1);
-        localStorage.setItem('calendarEvents', JSON.stringify(calendarEvents));
-        renderAllEvents();
-        renderCalendar();
-      }
-    });
-
-    li.appendChild(textSpan);
-    li.appendChild(delBtn);
-    allEventsList.appendChild(li);
+  // Open All Events Panel
+  if (allEventsBtn) allEventsBtn.addEventListener('click', () => {
+    renderAllEvents();
+    if (allEventsPanel) allEventsPanel.style.display = 'flex';
+    if (notesPanel) notesPanel.style.display = 'none';
+    if (calendarPanel) calendarPanel.style.display = 'none';
+    if (optionMenu) optionMenu.style.display = 'none';
   });
-}
 
-// Open All Events Panel
-allEventsBtn.addEventListener('click', ()=>{
-  renderAllEvents();
-  allEventsPanel.style.display = 'flex';
-  notesPanel.style.display = 'none';
-  calendarPanel.style.display = 'none';
-  optionMenu.style.display = 'none';
+  // Close All Events Panel
+  if (closeAllEvents) closeAllEvents.addEventListener('click', () => {
+    if (allEventsPanel) allEventsPanel.style.display = 'none';
+  });
 });
-
-// Close All Events Panel
-closeAllEvents.addEventListener('click', ()=> allEventsPanel.style.display = 'none');
 
 // ================= Dark Mode =================
 const darkToggle = document.getElementById('dark-toggle');
@@ -299,7 +313,8 @@ fullScreenNotesBtn.addEventListener("click", ()=>{
 // ================= Calendar =================
 document.addEventListener('DOMContentLoaded', () => {
   let currentDate = new Date();
-  let calendarEvents = JSON.parse(localStorage.getItem('calendarEvents')) || [];
+  // Make calendarEvents global so All Events panel can access it
+  window.calendarEvents = JSON.parse(localStorage.getItem('calendarEvents')) || [];
   let selectedDay = null;
 
   const calendarPanel = document.getElementById('calendar-panel');
@@ -312,8 +327,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const calendarBtn = document.getElementById('calendar-btn');
   const closeCalendar = document.getElementById('close-calendar');
 
+  // Reference to All Events panel rendering function (assume already defined elsewhere)
+  const renderAllEvents = window.renderAllEvents || function(){};
+
   function saveEvents() {
-    localStorage.setItem('calendarEvents', JSON.stringify(calendarEvents));
+    localStorage.setItem('calendarEvents', JSON.stringify(window.calendarEvents));
+    renderAllEvents(); // Update All Events panel immediately
   }
 
   function renderCalendar() {
@@ -347,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dayDiv.style.cursor = 'pointer';
 
       const dayKey = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-      const eventsForDay = calendarEvents.filter(e => e.date === dayKey);
+      const eventsForDay = window.calendarEvents.filter(e => e.date === dayKey);
       if(eventsForDay.length > 0){
         dayDiv.style.fontWeight='bold';
         dayDiv.title = eventsForDay.map(e => e.text).join('\n');
@@ -373,25 +392,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ================= Mobile Keyboard Handling (Messenger, IG, etc.) =================
+  // ================= Mobile Keyboard Handling =================
   let initialHeight = window.innerHeight;
 
   function scrollToInput(retry = 0) {
     if(calendarPanel && eventTextInput){
       const offset = eventTextInput.offsetTop - 20;
-      calendarPanel.style.paddingBottom = '250px'; // extra space for keyboard
+      calendarPanel.style.paddingBottom = '250px';
       calendarPanel.scrollTo({top: offset, behavior: 'smooth'});
 
-      if(retry < 5){ // retry multiple times in case keyboard animation delays
+      if(retry < 5){
         setTimeout(()=>scrollToInput(retry+1), 300);
       }
     }
   }
 
-  eventTextInput.addEventListener('focus', () => {
-    scrollToInput(0);
-  });
-
+  eventTextInput.addEventListener('focus', () => scrollToInput(0));
   eventTextInput.addEventListener('blur', () => {
     if(calendarPanel){
       calendarPanel.scrollTo({top: 0, behavior: 'smooth'});
@@ -402,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', () => {
     if(calendarPanel.style.display === 'flex'){
       const newHeight = window.innerHeight;
-      if(newHeight < initialHeight){ // keyboard open
+      if(newHeight < initialHeight){
         scrollToInput(0);
       }
       initialHeight = newHeight;
@@ -428,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(selectedDay).padStart(2,'0')}`;
-    calendarEvents.push({date: dateKey, text: eventTextInput.value.trim()});
+    window.calendarEvents.push({date: dateKey, text: eventTextInput.value.trim()});
     saveEvents();
     eventTextInput.value = '';
     renderCalendar();
