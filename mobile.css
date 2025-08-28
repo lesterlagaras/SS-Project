@@ -263,6 +263,16 @@ body.dark-mode #user-input {
   padding: 5px;
 }
 
+/* Scrollable calendar panel for mobile keyboard */
+#calendar-panel {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* smooth scrolling sa iOS */
+}
+
+#calendar-panel.keyboard-open {
+  padding-bottom: 250px; /* adjust according sa estimated keyboard height */
+}
+
 /* ================= Events List ================= */
 .events-list {
   display: flex;

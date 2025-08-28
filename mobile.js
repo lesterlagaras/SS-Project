@@ -373,28 +373,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ================= Scroll calendar panel for mobile keyboard =================
-  eventTextInput.addEventListener('focus', () => {
-    setTimeout(() => {
-      if(calendarPanel){
-        calendarPanel.scrollTo({
-          top: eventTextInput.offsetTop - 20,
-          behavior: 'smooth'
-        });
+  // ================= Mobile Keyboard Handling (Messenger, IG, etc.) =================
+  let initialHeight = window.innerHeight;
+
+  function scrollToInput(retry = 0) {
+    if(calendarPanel && eventTextInput){
+      const offset = eventTextInput.offsetTop - 20;
+      calendarPanel.style.paddingBottom = '250px'; // extra space for keyboard
+      calendarPanel.scrollTo({top: offset, behavior: 'smooth'});
+
+      if(retry < 5){ // retry multiple times in case keyboard animation delays
+        setTimeout(()=>scrollToInput(retry+1), 300);
       }
-    }, 300);
+    }
+  }
+
+  eventTextInput.addEventListener('focus', () => {
+    scrollToInput(0);
   });
 
   eventTextInput.addEventListener('blur', () => {
     if(calendarPanel){
-      calendarPanel.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      calendarPanel.scrollTo({top: 0, behavior: 'smooth'});
+      calendarPanel.style.paddingBottom = '0px';
     }
   });
 
-  // ================= Calendar Button Listeners =================
+  window.addEventListener('resize', () => {
+    if(calendarPanel.style.display === 'flex'){
+      const newHeight = window.innerHeight;
+      if(newHeight < initialHeight){ // keyboard open
+        scrollToInput(0);
+      }
+      initialHeight = newHeight;
+    }
+  });
+
+  // ================= Calendar Buttons =================
   prevMonthBtn.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth()-1);
     selectedDay = null;
