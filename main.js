@@ -368,55 +368,59 @@ if(calculatorBtn && calculatorPanel && calculatorInput){
   });
 }
 
-/* ================= TRANSLATOR PANEL SCRIPT ================= */
+document.addEventListener('DOMContentLoaded', () => {
+  // ... lahat ng existing code mo (notes, calendar, chat, etc.)
 
-// Get elements
-const translatorBtn = document.getElementById('translator-btn');
-const translatorPanel = document.getElementById('translator-panel');
-const translatorClose = document.getElementById('close-translator');
+  /* ================= TRANSLATOR PANEL SCRIPT ================= */
 
-// Open translator panel
-translatorBtn.addEventListener('click', () => {
-  translatorPanel.classList.remove('hidden');
-});
+  // Get elements
+  const translatorBtn = document.getElementById('translator-btn');
+  const translatorPanel = document.getElementById('translator-panel');
+  const translatorClose = document.getElementById('close-translator');
 
-// Close translator panel
-translatorClose.addEventListener('click', () => {
-  translatorPanel.classList.add('hidden');
-});
-
-// Elements
-const translateBtn = document.getElementById('translate-btn');
-const inputText = document.getElementById('translator-input');
-const outputText = document.getElementById('translator-output');
-const langSelect = document.getElementById('translator-language');
-
-// Dictionary container
-let dictionary = {};
-
-// Load external dictionary JSON
-fetch('./dictionary-en-tl.json')
-  .then(response => response.json())
-  .then(data => {
-    dictionary = data;
-    console.log("✅ Dictionary loaded:", dictionary);
-  })
-  .catch(error => {
-    console.error("❌ Error loading dictionary:", error);
+  // Open translator panel
+  translatorBtn.addEventListener('click', () => {
+    translatorPanel.classList.remove('hidden');
   });
 
-// Translate button click
-translateBtn.addEventListener('click', () => {
-  let text = inputText.value.trim().toLowerCase();
-  if (text === "") {
-    outputText.value = "Please enter text to translate.";
-    return;
-  }
+  // Close translator panel
+  translatorClose.addEventListener('click', () => {
+    translatorPanel.classList.add('hidden');
+  });
 
-  // Check dictionary
-  if (dictionary[text]) {
-    outputText.value = `[${langSelect.value}] ` + dictionary[text];
-  } else {
-    outputText.value = `[${langSelect.value}] (No translation found)`;
-  }
+  // Elements
+  const translateBtn = document.getElementById('translate-btn');
+  const inputText = document.getElementById('translator-input');
+  const outputText = document.getElementById('translator-output');
+  const langSelect = document.getElementById('translator-language');
+
+  // Dictionary container
+  let dictionary = {};
+
+  // Load external dictionary JSON
+  fetch('./dictionary-en-tl.json')
+    .then(response => response.json())
+    .then(data => {
+      dictionary = data;
+      console.log("✅ Dictionary loaded:", dictionary);
+    })
+    .catch(error => {
+      console.error("❌ Error loading dictionary:", error);
+    });
+
+  // Translate button click
+  translateBtn.addEventListener('click', () => {
+    let text = inputText.value.trim().toLowerCase();
+    if (text === "") {
+      outputText.value = "Please enter text to translate.";
+      return;
+    }
+
+    // Check dictionary
+    if (dictionary[text]) {
+      outputText.value = `[${langSelect.value}] ` + dictionary[text];
+    } else {
+      outputText.value = `[${langSelect.value}] (No translation found)`;
+    }
+  });
 });
