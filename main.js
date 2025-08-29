@@ -389,8 +389,7 @@ translatorClose.addEventListener('click', () => {
 const translateBtn = document.getElementById('translate-btn');
 const inputText = document.getElementById('translator-input');
 const outputText = document.getElementById('translator-output');
-const fromLang = document.getElementById('from-lang');
-const toLang = document.getElementById('to-lang');
+const langSelect = document.getElementById('translator-language');
 
 // Dictionary container
 let dictionary = {};
@@ -416,8 +415,8 @@ translateBtn.addEventListener('click', () => {
 
   // Check dictionary
   if (dictionary[text]) {
-    outputText.value = `[${fromLang.value} ➝ ${toLang.value}] ` + dictionary[text];
+    outputText.value = `[${langSelect.value}] ` + dictionary[text];
   } else {
-    outputText.value = `[${fromLang.value} ➝ ${toLang.value}] (No translation found)`;
+    outputText.value = `[${langSelect.value}] (No translation found)`;
   }
 });
