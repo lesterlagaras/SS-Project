@@ -409,18 +409,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
   // Translate button click
-  translateBtn.addEventListener('click', () => {
-    let text = inputText.value.trim().toLowerCase();
-    if (text === "") {
-      outputText.value = "Please enter text to translate.";
-      return;
-    }
+translateBtn.addEventListener('click', () => {
+  let text = inputText.value.trim().toLowerCase().replace(/[.,!?]/g, "");
+  if (text === "") {
+    outputText.value = "Please enter text to translate.";
+    return;
+  }
 
-    // Check dictionary
-    if (dictionary[text]) {
-      outputText.value = `[${langSelect.value}] ` + dictionary[text];
-    } else {
-      outputText.value = `[${langSelect.value}] (No translation found)`;
-    }
-  });
+  // Exact match first
+  if (dictionary[text]) {
+    outputText.value = `[${langSelect.value}] ` + dictionary[text];
+    return;
+  }
+
+  // Partial / fuzzy match
+  const keys = Object.keys(dictionary);
+  const match = keys.find(key => key.includes(text) || text.includes(key));
+
+  if (match) {
+    outputText.value = `[${langSelect.value}] (Approx) ` + dictionary[match];
+  } else {
+    outputText.value = `[${langSelect.value}] (No translation found)`;
+  }
+});
 });

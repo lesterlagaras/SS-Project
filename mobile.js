@@ -467,3 +467,69 @@ if(calculatorBtn && calculatorPanel && calculatorInput){
     });
   });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  // ... lahat ng existing code mo (notes, calendar, chat, etc.)
+
+  /* ================= TRANSLATOR PANEL SCRIPT ================= */
+
+  // Get elements
+  const translatorBtn = document.getElementById('translator-btn');
+  const translatorPanel = document.getElementById('translator-panel');
+  const translatorClose = document.getElementById('close-translator');
+
+  // Open translator panel
+  translatorBtn.addEventListener('click', () => {
+    translatorPanel.classList.remove('hidden');
+  });
+
+  // Close translator panel
+  translatorClose.addEventListener('click', () => {
+    translatorPanel.classList.add('hidden');
+  });
+
+  // Elements
+  const translateBtn = document.getElementById('translate-btn');
+  const inputText = document.getElementById('translator-input');
+  const outputText = document.getElementById('translator-output');
+  const langSelect = document.getElementById('translator-language');
+
+  // Dictionary container
+  let dictionary = {};
+
+  // Load external dictionary JSON
+  fetch('./dictionary-en-tl.json')
+    .then(response => response.json())
+    .then(data => {
+      dictionary = data;
+      console.log("✅ Dictionary loaded:", dictionary);
+    })
+    .catch(error => {
+      console.error("❌ Error loading dictionary:", error);
+    });
+
+  // Translate button click
+translateBtn.addEventListener('click', () => {
+  let text = inputText.value.trim().toLowerCase().replace(/[.,!?]/g, "");
+  if (text === "") {
+    outputText.value = "Please enter text to translate.";
+    return;
+  }
+
+  // Exact match first
+  if (dictionary[text]) {
+    outputText.value = `[${langSelect.value}] ` + dictionary[text];
+    return;
+  }
+
+  // Partial / fuzzy match
+  const keys = Object.keys(dictionary);
+  const match = keys.find(key => key.includes(text) || text.includes(key));
+
+  if (match) {
+    outputText.value = `[${langSelect.value}] (Approx) ` + dictionary[match];
+  } else {
+    outputText.value = `[${langSelect.value}] (No translation found)`;
+  }
+});
+});

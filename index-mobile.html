@@ -13,13 +13,14 @@
   <button id="option-btn" class="option-btn" aria-label="Options">⚙️ Options</button>
 
   <!-- Options Menu -->
-  <nav id="option-menu" class="option-menu" aria-label="Options Menu">
-    <button id="dark-toggle" class="option-btn-item" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
-    <button id="notes-btn" class="option-btn-item" aria-label="Open Notes">📒 Notes</button>
-    <button id="calendar-btn" class="option-btn-item" aria-label="Open Calendar">📅 Calendar</button>
-    <button id="view-events-btn" class="option-btn-item" aria-label="View All Events">📋 View All Events</button>
-    <button id="calculator-btn" class="option-btn-item" aria-label="Open Calculator">🧮 Calculator</button>
-  </nav>
+<div id="option-menu" class="option-menu">
+  <button id="dark-toggle" class="option-btn-item" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
+  <button id="notes-btn" class="option-btn-item" aria-label="Open Notes">📒 Notes</button>
+  <button id="calendar-btn" class="option-btn-item" aria-label="Open Calendar">📅 Calendar</button>
+  <button id="view-events-btn" class="option-btn-item" aria-label="View All Events">📋 View All Events</button>
+  <button id="calculator-btn" class="option-btn-item" aria-label="Open Calculator">🧮 Calculator</button>
+  <button id="translator-btn" class="option-btn-item" aria-label="Open Translator">🌐 Translator</button>
+</div>
 
   <!-- Notes Panel -->
   <section id="notes-panel" class="panel notes-panel" hidden>
@@ -95,6 +96,23 @@
     <button class="panel-btn calc-btn" data-value="C">C</button>
     <button class="panel-btn calc-btn" data-value="back">⌫</button>
   </div>
+</div>
+
+<!-- Translator Panel -->
+<div id="translator-panel" class="translator-panel hidden">
+  <div class="panel-header">
+    <h2>🌐 Translator</h2>
+    <button id="close-translator" class="panel-btn" aria-label="Close Translator">❌</button>
+  </div>
+  <textarea id="translator-input" placeholder="Enter text to translate..."></textarea>
+  <select id="translator-language">
+    <option value="en">English</option>
+    <option value="tl">Tagalog</option>
+    <option value="es">Spanish</option>
+    <option value="fr">French</option>
+  </select>
+  <button id="translate-btn">Translate</button>
+  <textarea id="translator-output" placeholder="Translation will appear here..." readonly></textarea>
 </div>
 
   <!-- Chat Container -->

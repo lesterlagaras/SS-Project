@@ -461,3 +461,45 @@ body.dark-mode #send-btn:hover {
   overflow-y: auto; /* allow scroll if needed */
   flex-grow: 1;
 }
+
+/* ================= TRANSLATOR PANEL ================= */
+.translator-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  max-width: 90%;
+  background: #fff;
+  color: #000;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  padding: 16px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.translator-panel.hidden {
+  display: none;
+}
+
+/* Translator textarea */
+.translator-panel textarea {
+  width: 100%;
+  height: 80px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: none;
+}
+
+/* Translator select + button */
+.translator-panel select,
+.translator-panel button {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
