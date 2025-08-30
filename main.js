@@ -1,4 +1,9 @@
+// ================= Import Dictionary =================
+import { dictionary } from './dictionary.js'; // must be at the top of the file
+
+// ================= DOMContentLoaded =================
 document.addEventListener('DOMContentLoaded', () => {
+
   // ================= Elements =================
   const welcomeMessage = document.getElementById('welcome-message');
   const conversation = document.getElementById('conversation');
@@ -28,6 +33,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const eventsList = document.getElementById('events-list');
   const closeEvents = document.getElementById('close-events');
   const fullScreenNotesBtn = document.getElementById('fullscreen-notes');
+
+  const calculatorBtn = document.getElementById('calculator-btn');
+  const calculatorPanel = document.getElementById('calculator-panel');
+  const calculatorInput = document.getElementById('calculator-input');
+  const closeCalculator = document.getElementById('close-calculator');
+  const calcButtons = document.querySelectorAll('.calc-btn');
+
+  const translatorBtn = document.getElementById('translator-btn');
+  const translatorPanel = document.getElementById('translator-panel');
+  const translatorClose = document.getElementById('close-translator');
+  const translateBtn = document.getElementById('translate-btn');
+  const inputText = document.getElementById('translator-input');
+  const outputText = document.getElementById('translator-output');
+  const langSelect = document.getElementById('translator-language');
 
   // ================= Notes Setup =================
   const pageIndicator = document.createElement("div");
@@ -256,12 +275,9 @@ document.addEventListener('DOMContentLoaded', () => {
   calendarBtn.addEventListener('click',()=>{calendarPanel.style.display=calendarPanel.style.display==='flex'?'none':'flex'; notesPanel.style.display='none'; allEventsPanel.style.display='none'; optionMenu.style.display='none';});
   closeCalendar.addEventListener('click',()=>calendarPanel.style.display='none');
 
-  setInterval(()=>{
-    const now=new Date(); 
+  setInterval(()=>{ const now=new Date(); 
     if(now.getDate()!==currentDate.getDate()||now.getMonth()!==currentDate.getMonth()||now.getFullYear()!==currentDate.getFullYear()){
-      currentDate=now; 
-      selectedDay=null; 
-      renderCalendar();
+      currentDate=now; selectedDay=null; renderCalendar();
     }
   },60000);
 
@@ -313,123 +329,81 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ================= Initial Render =================
-  renderCalendar();
-  resizeTextarea();
-});
-
-// ================= Calculator =================
-const calculatorBtn = document.getElementById('calculator-btn');
-const calculatorPanel = document.getElementById('calculator-panel');
-const calculatorInput = document.getElementById('calculator-input');
-const closeCalculator = document.getElementById('close-calculator');
-let calcExpression = '';
-
-if(calculatorBtn && calculatorPanel && calculatorInput){
-  const calcButtons = document.querySelectorAll('.calc-btn');
-
-  // Toggle calculator panel
-  calculatorBtn.addEventListener('click', () => {
-    calculatorPanel.style.display = calculatorPanel.style.display === 'flex' ? 'none' : 'flex';
-    if(typeof notesPanel !== 'undefined') notesPanel.style.display = 'none';
-    if(typeof calendarPanel !== 'undefined') calendarPanel.style.display = 'none';
-    if(typeof allEventsPanel !== 'undefined') allEventsPanel.style.display = 'none';
-    if(typeof optionMenu !== 'undefined') optionMenu.style.display = 'none';
-  });
-
-  // Close button
-  closeCalculator.addEventListener('click', () => calculatorPanel.style.display = 'none');
-
-  // Calculator button listeners
-  calcButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const val = btn.dataset.value;
-
-      if(val === 'C'){
-        calcExpression = '';
-        calculatorInput.value = '0';
-      } else if(val === '='){
-    try{
-        // Palitan ang symbols para ma-eval nang tama
-        calcExpression = eval(calcExpression.replace(/÷/g, '/').replace(/×/g, '*')).toString();
-        calculatorInput.value = calcExpression;
-    } catch {
-        calculatorInput.value = 'Error';
-        calcExpression = '';
-    }
-} else if(val === 'back'){  // <- dito yung backspace
-    calcExpression = calcExpression.slice(0, -1);
-    calculatorInput.value = calcExpression || '0';
-} else {
-    calcExpression += val;
-    calculatorInput.value = calcExpression;
-}
+  // ================= Calculator =================
+  if(calculatorBtn && calculatorPanel && calculatorInput){
+    // Toggle calculator panel
+    calculatorBtn.addEventListener('click', () => {
+      calculatorPanel.style.display = calculatorPanel.style.display === 'flex' ? 'none' : 'flex';
+      notesPanel.style.display = 'none';
+      calendarPanel.style.display = 'none';
+      allEventsPanel.style.display = 'none';
+      optionMenu.style.display = 'none';
     });
-  });
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-  // ... lahat ng existing code mo (notes, calendar, chat, etc.)
+    // Close button
+    closeCalculator.addEventListener('click', () => calculatorPanel.style.display = 'none');
 
-  /* ================= TRANSLATOR PANEL SCRIPT ================= */
+    // Calculator button listeners
+    calcButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.dataset.value;
 
-  // Get elements
-  const translatorBtn = document.getElementById('translator-btn');
-  const translatorPanel = document.getElementById('translator-panel');
-  const translatorClose = document.getElementById('close-translator');
+        if(val === 'C'){
+          calcExpression = '';
+          calculatorInput.value = '0';
+        } else if(val === '='){
+          try{
+            calcExpression = eval(calcExpression.replace(/÷/g, '/').replace(/×/g, '*')).toString();
+            calculatorInput.value = calcExpression;
+          } catch {
+            calculatorInput.value = 'Error';
+            calcExpression = '';
+          }
+        } else if(val === 'back'){
+          calcExpression = calcExpression.slice(0, -1);
+          calculatorInput.value = calcExpression || '0';
+        } else {
+          calcExpression += val;
+          calculatorInput.value = calcExpression;
+        }
+      });
+    });
+  }
 
-  // Open translator panel
+  // ================= Translator =================
   translatorBtn.addEventListener('click', () => {
     translatorPanel.classList.remove('hidden');
   });
 
-  // Close translator panel
   translatorClose.addEventListener('click', () => {
     translatorPanel.classList.add('hidden');
   });
 
-  // Elements
-  const translateBtn = document.getElementById('translate-btn');
-  const inputText = document.getElementById('translator-input');
-  const outputText = document.getElementById('translator-output');
-  const langSelect = document.getElementById('translator-language');
+  translateBtn.addEventListener('click', () => {
+    let text = inputText.value.trim().toLowerCase().replace(/[.,!?]/g, "");
+    const lang = langSelect.value.toLowerCase();
 
-  // Dictionary container
-  let dictionary = {};
+    if (!text) {
+      outputText.value = "Please enter text to translate.";
+      return;
+    }
 
-  // Load external dictionary JSON
-  fetch('./dictionary-en-tl.json')
-    .then(response => response.json())
-    .then(data => {
-      dictionary = data;
-      console.log("✅ Dictionary loaded:", dictionary);
-    })
-    .catch(error => {
-      console.error("❌ Error loading dictionary:", error);
-    });
+    if (dictionary[text] && dictionary[text][lang]) {
+      outputText.value = dictionary[text][lang];
+      return;
+    }
 
-  // Translate button click
-translateBtn.addEventListener('click', () => {
-  let text = inputText.value.trim().toLowerCase().replace(/[.,!?]/g, "");
-  if (text === "") {
-    outputText.value = "Please enter text to translate.";
-    return;
-  }
+    const keys = Object.keys(dictionary);
+    const match = keys.find(key => key.includes(text) || text.includes(key));
 
-  // Exact match first
-  if (dictionary[text]) {
-    outputText.value = `[${langSelect.value}] ` + dictionary[text];
-    return;
-  }
+    if (match && dictionary[match][lang]) {
+      outputText.value = `(Approx) ${dictionary[match][lang]}`;
+    } else {
+      outputText.value = `(No translation found for "${text}" in ${lang})`;
+    }
+  });
 
-  // Partial / fuzzy match
-  const keys = Object.keys(dictionary);
-  const match = keys.find(key => key.includes(text) || text.includes(key));
-
-  if (match) {
-    outputText.value = `[${langSelect.value}] (Approx) ` + dictionary[match];
-  } else {
-    outputText.value = `[${langSelect.value}] (No translation found)`;
-  }
-});
+  // ================= Initial Render =================
+  renderCalendar();
+  resizeTextarea();
 });
